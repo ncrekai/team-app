@@ -1,6 +1,12 @@
 ## Hi
-I uploaded mern-portfolio submission with the content pages removed. It does not have anything from the authentication/authorization lesson yet. We'll need to redo the config.js because I seperated my password text from it. 
+I uploaded my Assignment 2 MERN Portfolio submission with most of the content pages removed from client-site. 
 
-### Other than that I *think* this should be fine as the project base to build on
+Backend stuff that needs to be added:
+- authentication/authorization
+- redo config.js file to match new group db collection
+- redo API calls once we figure out project details
+
+
+### Other than that I *think* this should be fine as a base to build the rest of the project on
 
 -N
