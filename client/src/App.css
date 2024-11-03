@@ -17,6 +17,7 @@
     flex-flow: row nowrap;
     flex: 0 0 40px;
     justify-content: space-between;
+    align-items: center;
 }
 .nav-middle {
     flex: 1;
@@ -24,8 +25,8 @@
 
 }
 .logo, .menu-icon {
-    height: 35px;
-    width: 35px;
+    height: 30px;
+    width: 30px;
 }
 .dropdown-container {
     flex: 1;
@@ -45,22 +46,75 @@ p, h1, h2, h3, h4, ul, li {
    padding: 0;
 }
 
-* {
-    border: #8e8e8e 1px dashed;
+.page-container {
+    background: #efefef;
+    align-items: stretch;
+    height: calc(100vh - 100px)
 }
 
+.page-container, .page-outer, .page-inner {
+    width: 100%;
+    border: none;
+    margin: 0;
+    padding: 0;
+}
+.page, .register-container form, .login-container form, .input-container, .dashboard-container {
+    width: 100%;
+    flex-flow: column nowrap;
+    align-items: center;
+}
+.page-inner {
+    padding: 10px;
+}
+.page {
+    padding: 10px;
+    align-items: center;
+    flex: 1;
+    background: #fff;
+}
+.page-title {
+    font-size: 26px;
+    font-weight: 600;
+    padding: 15px 0;
+}
 
-/*
-        <div id='Nav' className='nav-container'>
-            <div className='nav-inner'>
-                <div className='logo-container'>
-                    <div className='logo'>
-                        <img src={ logo }/>
-                    </div> 
-                </div>
-                <div className='title-container'>
-                    <h3>Team 5 Project</h3>
-                </div>
-                <div className='list-container'>
-                    <ul><li><Link to='/'>Home</Link></li></ul>
-*/
+.input-container {
+    flex: 1;
+    padding: 10px;
+    align-items: flex-start;
+}
+.input-text {
+    height: 40px;
+    border: none;
+    background: #efefef;
+    font-size: 22px;
+    padding: 5px;
+}
+.input-label {
+    /* flex: 1; */
+    font-size: 18px;
+    padding: 5px 0;
+}
+.button {
+    border:#efefef 3px solid;
+    background: #fff;
+    padding: 5px 15px;
+    font-size: 18px;
+}
+span.required {
+    color: red;
+    padding: 0 10px;
+}
+.dashboard-display {
+    border: 1px black solid;
+    padding: 10px;
+    margin: 10px 0;
+    width: 100%;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+* {
+    /* border: #8e8e8e 1px dashed; */
+}
