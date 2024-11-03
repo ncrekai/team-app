@@ -1,0 +1,66 @@
+.app-container {
+    height: 100vh;
+}
+.app-container * {
+    display: flex;
+}
+.nav-container {
+    
+    width: 100%;
+    padding: 10px;
+}
+.nav-inner {
+    flex: 1;
+    flex-flow: column nowrap
+}
+.nav-upper, .nav-lower {
+    flex-flow: row nowrap;
+    flex: 0 0 40px;
+    justify-content: space-between;
+}
+.nav-middle {
+    flex: 1;
+    flex-flow: row nowrap;
+
+}
+.logo, .menu-icon {
+    height: 35px;
+    width: 35px;
+}
+.dropdown-container {
+    flex: 1;
+    background: #fff;
+    flex-flow: column nowrap;
+    align-items: center;
+    
+}
+.list-container {
+    flex: 1;
+    flex-flow: row nowrap;
+    justify-content: space-evenly;
+}
+
+p, h1, h2, h3, h4, ul, li {
+   margin: 0;
+   padding: 0;
+}
+
+* {
+    border: #8e8e8e 1px dashed;
+}
+
+
+/*
+        <div id='Nav' className='nav-container'>
+            <div className='nav-inner'>
+                <div className='logo-container'>
+                    <div className='logo'>
+                        <img src={ logo }/>
+                    </div> 
+                </div>
+                <div className='title-container'>
+                    <h3>Team 5 Project</h3>
+                </div>
+                <div className='list-container'>
+                    <ul><li><Link to='/'>Home</Link></li></ul>
+*/
