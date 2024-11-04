@@ -1,5 +1,10 @@
 import { Link } from 'react-router-dom';
-const Home = () => {
+const Home = (props) => {
+  console.log(props)
+  // const dashboard = {
+  //   path: '/dashboard',
+  //   state: {}
+  // }
   
   return (
     <div id='home' className='home-container page-outer'>

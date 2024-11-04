@@ -22,14 +22,16 @@ const Dashboard = (props) => {
       <div id='dashboard' className='page-outer'>
         <div className='page-inner'>
           <div className='page dashboard'>
-            <div className='page-title'>Welcome {USER.profile.fname}</div>
+            {/* <div className='page-title'>Welcome {USER.profile.fname}</div> */}
+
+            <div className='page-title'>Welcome</div>
             <div className='dashboard-container'>
-              <h3>My Trips</h3>
+              {/* <h3>My Trips</h3>
               {USER.trips.map((trip,i) => <DisplayTrip key={`trip-${i}`} trip={trip} />)}
               <h3>My Lists</h3>
               {USER.lists.map((list,i) => <DisplayList key={`list-${i}`} list={list} trips={USER.trips} />)}
               <h3>My Profile</h3>
-              <DisplayProfile userProfile={USER.profile}/>
+              <DisplayProfile userProfile={USER.profile}/> */}
             </div>
           </div>
         </div>

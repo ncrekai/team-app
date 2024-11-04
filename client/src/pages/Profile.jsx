@@ -1,8 +1,12 @@
-import { useParams } from "react-router-dom";
+// import { useParams, useLoaderData  } from "react-router-dom";
+
+// export const loader = async ({ params }) => {
+//     const contact = 
+// }
 
 const Profile = (props) => {
     const {fname, lname, email} = props
-    const routeParams = useParams()
+    // const routeParams = useParams()
     return (
         <div>
             <h3>Welcome User</h3>
