@@ -9,7 +9,7 @@ export const getUsers = async () => {
     return users
 }
 
-export const getUser = async (id) => {
+export const getUser = (id) => {
     const val = data.users.find(el => el.id == id)
     const user = {
         id: val.id,

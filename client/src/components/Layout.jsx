@@ -1,13 +1,13 @@
 import { Outlet } from 'react-router-dom';
 import Nav from './Nav';
 
-const Layout = (props) => {
-    console.log(props)
+const Layout = () => {
+    // console.log(props)
     return (
         <>
             <Nav />
             <div id='Page' className='page-container'>
-                <Outlet user={props} />
+                <Outlet />
             </div>
         </>
     )

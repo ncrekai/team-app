@@ -1,14 +1,12 @@
+import { useParams} from "react-router-dom";
+
 const ListEdit = () => {
+    const routeParams = useParams()
+    console.log(routeParams)
     return (
-      <div id='dashboard' className='page-outer'>
-        <div className='page-inner'>
-            <div className='lists'>
-                    <div className='page-title'>Edit List</div>
-                    <div className='list-container'></div>
-            </div>
+        <div>
+            <h3>Edit List</h3>
         </div>
-      </div>
-    );
-  };
-  export default ListEdit;
-  
+    )
+}
+export default ListEdit

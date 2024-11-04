@@ -1,4 +1,8 @@
+import { useParams } from 'react-router-dom';
+
 const TripView = () => {
+  const routeParams = useParams()
+  console.log(routeParams)
     return (
       <div id='dashboard' className='page-outer'>
         <div className='page-inner'>
