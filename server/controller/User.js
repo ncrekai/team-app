@@ -12,7 +12,7 @@ const create = async(req,res) => {
 
     try {
         await user.save()
-        return res.json({ message:"Added Successfully" })
+        return res.json({ message:"User added successfully" })
     } catch(err) {
         return res.status(500).json({ error: err.message });
     }
@@ -20,10 +20,11 @@ const create = async(req,res) => {
 
 const list = async(req,res)=>{
     try{
+        // Find all users and select the fields to be returned
         let users = await User.find().select('name email updated created');
         res.json(users);
     } catch(err) {
-        return res.json({ error: "I broke (model/user/list)" })
+        return res.status(500).json({ error: err.message });
     }
 }
 
