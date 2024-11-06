@@ -24,7 +24,7 @@ const UserSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    hashed_passwords: {
+    hashedPassword: {
         type: String,
         required: 'Password is required'
     },
@@ -36,13 +36,15 @@ const UserSchema = new mongoose.Schema({
 });
 
 UserSchema.virtual('password')
-.set((password) => {
-    this._password = password;
-    this.hashedPasswords = password
-}).get(() => this._password);
+    .set((password) => {
+        this._password = password;
+    })
+    .get(() => {
+        this._password
+    });
 
 // Password validation
-UserSchema.path('hashed_passwords').validate((v) => {
+UserSchema.path('hashedPasswords').validate((v) => {
     if (this._password && this._password.length < 8) {
         this.invalidate('password', 'Password should be more than 8 characters')
     }
@@ -53,12 +55,12 @@ UserSchema.path('hashed_passwords').validate((v) => {
 
 //  Check if the password has been modified
 UserSchema.pre('save', function(next) {
-    if (this.isModified('hashed_password')) {
-        bcrypt.hash(this.hashed_password, SALT_ROUNDS, (err, hashedPassword) => {
+    if (this.isModified('hashedPassword')) {
+        bcrypt.hash(this.hashedPassword, SALT_ROUNDS, (err, hashedPassword) => {
             // If there's an error during hashing, pass it to the next middleware
             if (err) return next(err);
             // Set the hashed password on the document
-            this.hashed_password = hashedPassword;
+            this.hashedPassword = hashedPassword;
             // Optionally update the 'updated' timestamp
             this.updated = Date.now();
             next();
