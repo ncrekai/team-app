@@ -1,7 +1,6 @@
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt');
-// the number of iterations the hashing function performs on the password and salt.
-const SALT_ROUNDS = 10;
+const SALT_ROUNDS = 10; // the number of iterations the hashing function performs on the password and salt.
 
 const UserSchema = new mongoose.Schema({
     name: {

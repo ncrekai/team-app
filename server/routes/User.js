@@ -2,7 +2,7 @@ const userCntrl = require('../controller/User.js')
 const express = require('express')
 const router = express.Router();
 
-router.param('userId', userCntrl.userById)
+router.param('tripId', userCntrl.userById);
 
 router.route('/api/users').get(userCntrl.list) // GET
 router.route('/api/users/:userId').get(userCntrl.read) // GET
