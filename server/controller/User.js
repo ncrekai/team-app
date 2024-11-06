@@ -18,7 +18,7 @@ const create = async(req,res) => {
     }
 }
 
-const list = async(req,res)=>{
+const list = async(req,res)=> {
     try{
         // Find all users and select the fields to be returned
         let users = await User.find().select('name email updated created');
@@ -28,18 +28,20 @@ const list = async(req,res)=>{
     }
 }
 
-const userById = async(req,res,next,id)=>{
-    try{
-        let user = await User.findById(id);
+// Middleware to find a user by their ID
+const userById = async(req, res, next, id)=> {
+    try {
+        // Find the user by their ID
+        const user = await User.findById(id);
         if (!user) return res.json({ error:"User doesn't exist" })
         req.profile = user
         next()
     } catch(err) {
-        return res.json({ error: "I broke (model/user/userById)" })
+        return res.status(500).json({ error: err.message });
     }
 }
 
-const read = (req,res) =>{
+const read = (req,res) => {
     req.profile.hashed_password = undefined
     req.profile.salt = undefined
     return res.json(req.profile)
@@ -55,32 +57,36 @@ const update = async(req,res) => {
         user.salt  = undefined
         res.json(user)
     } catch(err) {
-        return res.json({ error: "I broke (model/user/update)" })
+        return res.status(500).json({ error: err.message });
     }
 }
 
 const remove = async(req,res) => {
     try{
         let user = req.profile
+        // Delete the user from the database
         let deletedUser = await user.deleteOne()
         deletedUser.hashed_password = undefined
         deletedUser.salt = undefined
         res.json(deletedUser)
     } catch(err) {
-        return res.json({ error: "I broke (model/user/remove)" })
+        return res.status(500).json({ error: err.message });
     }
 }
 
 const removeAll = async(req,res) => {
     try{
         let users = await User.find()
-        for (let user in users) {
-            let deletedUser = await users[user].deleteOne()
-            deletedUser.hashed_password = undefined
-            deletedUser.salt = undefined
+        // Iterate over all users and delete each one
+        for (let user of users) {
+            let deletedUser = await user.deleteOne();
+            deletedUser.hashedPassword = undefined;
+            deletedUser.salt = undefined;
         }
+        return res.json({ message: "All users have been deleted successfully." });
+
     } catch(err) {
-        return res.json({ error: "I broke (model/user/removeAll)" })
+        return res.status(500).json({ error: err.message });
     }
 }
 
