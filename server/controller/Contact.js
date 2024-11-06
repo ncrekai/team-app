@@ -1,26 +1,36 @@
 const Contact = require('../models/Contact.js');
 
-const create = async(req,res) => {
-    const contact = new Contact(req.body)
-    try{
-        await contact.save()
-        return res.json({ message:"Added Successfully" })
-    } catch(err) {
-        return res.json({ error: "I broke (model/contact/create)" })
-    }
-}
+// Create a new contact
+const create = async (req, res) => {
+    const { firstname, lastname, email, phone, user, trip } = req.body;
 
-const list = async(req,res)=>{
-    try{
+    // Validate required fields
+    if (!firstname || !lastname || !email || !phone || !user) {
+        return res.status(400).json({ error: "All fields are required!" });
+    }
+
+    try {
+        const contact = new Contact({ firstname, lastname, email, phone, user, trip });
+        await contact.save();
+        return res.status(201).json({ message: "Contact added successfully", contact });
+    } catch (err) {
+        return res.status(500).json({ error: err.message || "Error while adding contact" });
+    }
+};
+
+// List all contacts for a user
+const list = async(req,res)=> {
+    try {
         let contacts = await Contact.find().select('firstname lastname email');
         res.json(contacts);
     } catch(err) {
-        return res.json({ error: "I broke (model/contact/list)" })
+        return res.status(500).json({ error: err.message || "Error while retrieving contacts" });
     }
 }
 
-const contactById = async(req,res,next,id)=>{
-    try{
+// Get a specific contact by ID
+const contactById = async(req,res,next,id)=> {
+    try {
         let contact = await Contact.findById(id);
         if (!contact) return res.json({ error:"Contact doesn't exist" })
         req.profile = contact
@@ -30,40 +40,40 @@ const contactById = async(req,res,next,id)=>{
     }
 }
 
-const read = (req,res) =>{
-    return res.json(req.profile)
+// Read a specific contact
+const read = (req,res) => {
+    return res.status(200).json(req.profile);
 }
 
+// Update a contact
 const update = async(req,res) => {
-    try{
+    try {
         let contact = req.profile
         let merge = Object.assign(contact, req.body)
         await contact.save()
         res.json(contact)
     } catch(err) {
-        return res.json({ error: "I broke (model/contact/update)" })
+        return res.status(500).json({ error: err.message || "Error while updating contact" });
     }
 }
 
+// Delete a contact
 const remove = async(req,res) => {
-    try{
+    try {
         let contact = req.profile
         let deletedContact = await contact.deleteOne()
-        res.json(deletedContact)
+        return res.status(200).json({ message: "Contact deleted successfully", deletedContact });
     } catch(err) {
-        return res.json({ error: "I broke (model/contact/remove)" })
+        return res.status(500).json({ error: err.message || "Error while deleting contact" });
     }
 }
 
 const removeAll = async(req,res) => {
-    try{
-        let contacts = await Contact.find()
-        console.log(contacts)
-        for (let contact in contacts) {
-            let deletedContact = await contacts[contact].deleteOne()
-        }
-    } catch(err) {
-        return res.json({ error: "I broke (model/contact/removeAll)" })
+    try {
+        const result = await Contact.deleteMany({ user: req.params.userId });
+        return res.status(200).json({ message: `${result.deletedCount} contacts deleted` });
+    } catch (err) {
+        return res.status(500).json({ error: err.message || "Error while deleting all contacts" });
     }
 }
 
