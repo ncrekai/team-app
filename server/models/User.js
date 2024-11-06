@@ -10,7 +10,7 @@ const UserSchema = new mongoose.Schema({
         type: String,
         trim: true,
         unique: 'Email already exists',
-        match: [/.+\@.+\..+/, 'Please fill a vadil email address'],
+        match: [/.+@.+\..+/, 'Please fill a vadil email address'],
         required: 'Email is required'
     },
     created: {
@@ -25,7 +25,11 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: 'Password is required'
     },
-    salt: String
+    salt: String,
+    trips: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Trip'
+    }]
 });
 
 UserSchema.virtual('password')
