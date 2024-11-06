@@ -1,6 +1,13 @@
 const User = require('../models/User.js');
 
 const create = async(req,res) => {
+    const { name, email, password } = req.body;
+    // Check if required fields are missing
+    if (!name || !email || !password) {
+        return res.status(400).json({ error: "Name, email, and password are required." });
+    }
+
+    // Create a new User document from the request body
     const user = new User(req.body)
     try{
         await user.save()
