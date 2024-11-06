@@ -9,11 +9,12 @@ const create = async(req,res) => {
 
     // Create a new User document from the request body
     const user = new User(req.body)
-    try{
+
+    try {
         await user.save()
         return res.json({ message:"Added Successfully" })
     } catch(err) {
-        return res.json({ error: "I broke (model/user/create)" })
+        return res.status(500).json({ error: err.message });
     }
 }
 
