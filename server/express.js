@@ -6,7 +6,6 @@ const cookieParser = require('cookie-parser');
 const compress = require('compression');
 const cors = require('cors');
 const helmet = require('helmet');
-const bodyParser = require('body-parser');
 
 // Import routes
 const assetsRouter = require("./assets-router");
