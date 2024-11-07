@@ -1,5 +1,4 @@
 // require module
-const INDEX = require('./index')
 const express = require('express')
 const path = require('path')
 const cookieParser = require('cookie-parser');
@@ -12,6 +11,7 @@ const assetsRouter = require("./assets-router");
 const userRoutes = require ('./routes/User')
 const contactRoutes = require ('./routes/Contact')
 const tripRoutes = require ('./routes/Trip')
+const profileRoutes = require ('./routes/Profile')
 
 // Initialize the app
 const app = express()
@@ -34,6 +34,7 @@ app.use('/src',assetsRouter);
 app.use('/users',userRoutes);
 app.use('/contacts',contactRoutes);
 app.use('/trips',tripRoutes);
+app.use('/profiles',profileRoutes);
 
 // API endpoint
 app.get('/api/v1', (req, res) => {
