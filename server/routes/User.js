@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const userCntrl = require('../controller/User');
+const authMiddleware = require('../middlewares/authMiddleware');
 
 // get the list of all users (GET)
 router.route('/').get(userCntrl.getUsers);

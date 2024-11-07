@@ -12,6 +12,7 @@ const userRoutes = require ('./routes/User')
 const contactRoutes = require ('./routes/Contact')
 const tripRoutes = require ('./routes/Trip')
 const profileRoutes = require ('./routes/Profile')
+const authRoutes = require ('./routes/authRoutes')
 
 // Initialize the app
 const app = express()
@@ -31,10 +32,11 @@ app.use('/',express.static(path.join(__dirname,'public')));
 app.use('/src',assetsRouter);
 
 // Use route handlers
-app.use('/users',userRoutes);
-app.use('/contacts',contactRoutes);
-app.use('/trips',tripRoutes);
-app.use('/profiles',profileRoutes);
+app.use('/users', userRoutes);
+app.use('/contacts', contactRoutes);
+app.use('/trips', tripRoutes);
+app.use('/profiles', profileRoutes);
+app.use('/api/auth', authRoutes);
 
 // API endpoint
 app.get('/api/v1', (req, res) => {

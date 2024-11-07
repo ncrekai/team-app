@@ -17,6 +17,7 @@
     "express": "4.21.1",
     "global": "4.4.0",
     "helmet": "^8.0.0",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.7.1"
   },
   "scripts": {

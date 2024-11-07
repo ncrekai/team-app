@@ -42,33 +42,23 @@ const UserSchema = new mongoose.Schema({
     }],
 });
 
-// Virtual field for setting and getting the plain password
-UserSchema.virtual('_password')
-    .set(function(password) {
-        this.__password = password; // Store the plain password in a temporary field
-    })
-    .get(function() {
-        return this.__password; // Retrieve the plain password when needed
-    });
-
-// Password validation
+// Pre-save hook to hash the password if it’s new or modified
 UserSchema.pre('save', function(next) {
-    // Check if the plain password is set before hashing it
-    if (this.__password) {
-        if (this.__password.length < 8) {
-            return next(new Error('Password should be more than 8 characters'));
-        }
-        bcrypt.hash(this.__password, SALT_ROUNDS, (err, hashedPassword) => {
-            if (err) return next(err);
-            this.password = hashedPassword; // Save the hashed password to the password field
-            this.updated = Date.now(); // Update the timestamp
-            next();
-        });
-    } else {
-    next();
- }});
+    const user = this;
 
-// Method to compare plain password with hashed password
+    // Only hash the password if it has been modified (new or changed)
+    if (!user.isModified('password')) return next();
+
+    // Hash the password
+    bcrypt.hash(user.password, SALT_ROUNDS, (err, hashedPassword) => {
+        if (err) return next(err);
+        user.password = hashedPassword; // Set the hashed password
+        user.updated = Date.now(); // Update the timestamp
+        next();
+    });
+});
+
+// Method to compare a plain text password with the hashed password
 UserSchema.methods.comparePassword = function(password) {
     return bcrypt.compare(password, this.password);
 };

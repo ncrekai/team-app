@@ -22,7 +22,7 @@ exports.createContact = async (req, res) => {
 // List all contacts for a user
 exports.getAllContacts = async(req,res)=> {
     try {
-        let contacts = await Contact.find().select('firstname lastname email');
+        let contacts = await Contact.find().select('firstName lastName email');
         res.json(contacts);
     } catch(err) {
         return res.status(500).json({ error: err.message || "Error while retrieving contacts" });
