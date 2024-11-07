@@ -2,15 +2,15 @@ const Contact = require('../models/Contact.js');
 
 // Create a new contact
 const create = async (req, res) => {
-    const { firstname, lastname, email, phone, user, trip } = req.body;
+    const { firstName, lastName, email, phone, user, trip } = req.body;
 
     // Validate required fields
-    if (!firstname || !lastname || !email || !phone || !user) {
-        return res.status(400).json({ error: "All fields are required!" });
+    if (!firstName || !lastName || !email || !phone || !user) {
+        return res.status(400).json({ error: "firstName, lastName, email, phone, and user are required." });
     }
 
     try {
-        const contact = new Contact({ firstname, lastname, email, phone, user, trip });
+        const contact = new Contact({ firstName, lastName, email, phone, user, trip });
         await contact.save();
         return res.status(201).json({ message: "Contact added successfully", contact });
     } catch (err) {

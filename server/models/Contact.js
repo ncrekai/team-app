@@ -1,12 +1,12 @@
 const mongoose = require('mongoose')
 
 const ContactSchema = new mongoose.Schema({
-    firstname: {
+    firstName: {
         type: String,
         trim: true,
         required: 'First name is required'
     },
-    lastname: {
+    lastName: {
         type: String,
         trim: true,
         required: 'Last name is required'
