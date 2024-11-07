@@ -69,29 +69,25 @@ exports.updateTrip = async (req, res) => {
 // Remove a trip
 exports.deleteTrip = async (req, res) => {
     try {
-        // Get the trip object from the request
-        const trip = req.trip;
-        const deletedTrip = await trip.deleteOne();
-
-        return res.json(deletedTrip); // Return the deleted trip data
-    } catch (err) {
-        return res.status(500).json({ error: "Error while deleting trip" });
+        const trip = await Trip.findByIdAndDelete(req.params.id);
+        if (!trip) {
+            return res.status(404).json({ message: "Trip not found" });
+        }
+        res.status(200).json({ message: "Trip deleted successfully" });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
+
 };
 
 // Remove all trips
 exports.deleteAllTrips = async (req, res) => {
     try {
-        const trips = await Trip.find();
-
-        for (let trip of trips) {
-            // Delete each trip
-            await trip.deleteOne();
-        }
-        return res.json({ message: "All trips have been removed" });
-
-    } catch (err) {
-        return res.status(500).json({ error: "Error while removing all trips" });
+        await Trip.deleteMany();
+        res.status(200).json({ message: "All trips deleted successfully" });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
+
 };
 
