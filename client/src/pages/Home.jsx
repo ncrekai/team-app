@@ -15,7 +15,7 @@ const Home = () => {
                <Link to='/login'>Sign In</Link>
             </div>
             <em>
-               <br />* Temporary landing page until we have ability to use log-in
+               <br />* Temporary landing page until log-in is set up
             </em>
          </div>
       </div>

@@ -24,7 +24,7 @@ const Login = () => {
       <div className='page-inner'>
          <div className='page'>
             <div className='page-title'>Sign In</div>
-               <form className='form-container' onSubmit={handleSubmit}>name, val, display handleInput
+               <form className='form-container' onSubmit={handleSubmit}>
                   <div className='input-container'>
                      <div className='input-label'>Username:</div>
                      <input className='input-text' id='username' name='username' type='text' onChange={handleInput} />
