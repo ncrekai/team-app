@@ -1,10 +1,21 @@
 const User = require('../models/User');
+const Profile = require('../models/Profile');
 
 exports.createUser = async (req, res) => {
     try {
+        // Create a new user
         const user = new User(req.body);
         await user.save();
-        res.json({ message: "User Created  successfully", user: user });
+
+        // Create a new profile
+        const profile = new Profile({ user: user._id, preferences: req.body.preferences || {}});
+        await profile.save();
+
+        // Update the user with the profile ID
+        user.profile = profile._id;
+        await user.save();
+
+        res.json({ message: "User Created  successfully", user: user, profile: profile });
     } catch (error) {
         res.status(400).json({ message: error.message });
     }

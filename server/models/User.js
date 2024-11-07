@@ -27,6 +27,11 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: 'Password is required',
     },
+    profile: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Profile',
+        unique: true,    // Ensures a user can have only one profile
+    },
     trips: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Trip',
