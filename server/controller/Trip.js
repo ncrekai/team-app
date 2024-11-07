@@ -37,14 +37,16 @@ exports.getAllTrips = async (req, res) => {
 // Get a single trip by ID
 exports.getTripById = async (req, res, next, id) => {
     try {
-        const trip = await Trip.findById(id);
-        if (!trip) return res.status(404).json({ error: "Trip not found" });
+        const trip = await Trip.findById(id)
+        if (!trip) {
+            return res.status(404).json({ message: "Trip not found" });
+        }
 
-        req.trip = trip; // Attach the trip to the request object
-        next(); // Call next middleware or controller function
-    } catch (err) {
-        return res.status(500).json({ error: "Error fetching trip" });
+        res.status(200).json(trip);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
+
 };
 
 // Read a trip
@@ -55,15 +57,20 @@ exports.read = (req, res) => {
 // Update a trip
 exports.updateTrip = async (req, res) => {
     try {
-        const trip = req.trip; // Get the trip object from the request
-        const updatedTrip = Object.assign(trip, req.body); // Merge the updated fields
+        const updatedTrip = await Trip.findByIdAndUpdate( req.params.id, req.body, {
+            new: true, // Return the updated document
+            runValidators: true // Validate before saving
+        });
 
-        // Save the updated trip
-        await updatedTrip.save();
-        return res.json(updatedTrip);
-    } catch (err) {
-        return res.status(500).json({ error: "Error while updating trip" });
+        if (!updatedTrip) {
+            return res.status(404).json({ message: "Contact not found" });
+        }
+
+        res.status(200).json(updatedTrip);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
     }
+
 };
 
 // Remove a trip

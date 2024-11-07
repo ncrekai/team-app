@@ -1,4 +1,5 @@
 const Contact = require('../models/Contact.js');
+const User = require("../models/User");
 
 // Create a new contact
 exports.createContact = async (req, res) => {
@@ -19,7 +20,7 @@ exports.createContact = async (req, res) => {
 };
 
 // List all contacts for a user
-exports.getContacts = async(req,res)=> {
+exports.getAllContacts = async(req,res)=> {
     try {
         let contacts = await Contact.find().select('firstname lastname email');
         res.json(contacts);
@@ -31,12 +32,14 @@ exports.getContacts = async(req,res)=> {
 // Get a specific contact by ID
 exports.getContactById = async(req,res,next,id)=> {
     try {
-        let contact = await Contact.findById(id);
-        if (!contact) return res.json({ error:"Contact doesn't exist" })
+        const contact = await Contact.findById(id).populate('trips');
+        if (!contact) {
+            return res.json({ error:"Contact doesn't exist" })
+        }
         req.profile = contact
         next()
     } catch(err) {
-        return res.json({ error: "I broke (model/contact/contactById)" })
+        return res.status(500).json({ error: err.message });
     }
 }
 
