@@ -28,7 +28,13 @@ const UserSchema = new mongoose.Schema({
         required: 'Password is required'
     },
     salt: String,
+    // Trips user has created or is involved in
     trips: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Trip'
+    }],
+    // Trips user has saved for later
+    savedTrips: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Trip'
     }]
