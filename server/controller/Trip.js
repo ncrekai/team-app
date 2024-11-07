@@ -1,7 +1,7 @@
 const Trip = require('../models/Trip'); // Import the Trip model
 const User = require('../models/User');
 // Create a new trip
-const create = async (req, res) => {
+exports.createTrip = async (req, res) => {
     const { name, destination, startDate, endDate, description, createdBy } = req.body;
 
     // Validate required fields
@@ -25,7 +25,7 @@ const create = async (req, res) => {
 };
 
 // List all trips
-const list = async (req, res) => {
+exports.getAllTrips = async (req, res) => {
     try {
         const trips = await Trip.find().select('name destination startDate endDate createdBy');
         return res.json(trips);
@@ -35,7 +35,7 @@ const list = async (req, res) => {
 };
 
 // Get a single trip by ID
-const tripById = async (req, res, next, id) => {
+exports.getTripById = async (req, res, next, id) => {
     try {
         const trip = await Trip.findById(id);
         if (!trip) return res.status(404).json({ error: "Trip not found" });
@@ -48,12 +48,12 @@ const tripById = async (req, res, next, id) => {
 };
 
 // Read a trip
-const read = (req, res) => {
+exports.read = (req, res) => {
     return res.json(req.trip);
 };
 
 // Update a trip
-const update = async (req, res) => {
+exports.updateTrip = async (req, res) => {
     try {
         const trip = req.trip; // Get the trip object from the request
         const updatedTrip = Object.assign(trip, req.body); // Merge the updated fields
@@ -67,7 +67,7 @@ const update = async (req, res) => {
 };
 
 // Remove a trip
-const remove = async (req, res) => {
+exports.deleteTrip = async (req, res) => {
     try {
         // Get the trip object from the request
         const trip = req.trip;
@@ -80,7 +80,7 @@ const remove = async (req, res) => {
 };
 
 // Remove all trips
-const removeAll = async (req, res) => {
+exports.deleteAllTrips = async (req, res) => {
     try {
         const trips = await Trip.find();
 
@@ -95,4 +95,3 @@ const removeAll = async (req, res) => {
     }
 };
 
-module.exports = { create, list, tripById, read, update, remove, removeAll };
