@@ -9,5 +9,14 @@ export default defineConfig({
     rollupOptions: {
       input: './src/main.jsx'
     }
+  },
+  server: {
+    origin: 'http://localhost:5173',
+    proxy: {
+      '/api': {
+        target: 'http://localhost:4000',
+        changeOrigin: true,
+      },
+    },
   }
 })

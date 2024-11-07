@@ -6,7 +6,7 @@ const data = {
             'password': '123bob'
         },
         {
-            'id': 1,
+            'id': 2,
             'username': 'kenguy',
             'password': '123ken'
         }
@@ -15,32 +15,49 @@ const data = {
         {
             'id': 1,
             'user': 1,
-            'place': 'Paris',
+            'name': 'Paris',
             'startDate': '12/01/2024',
-            'endDate': '12/08/2024'
+            'endDate': '12/08/2024',
+            'lists': [1]
         },
         {
             'id': 2,
             'user': 1,
-            'place': 'Hong Kong',
+            'name': 'Hong Kong',
             'startDate': '02/01/2025',
-            'endDate': '02/14/2025'
+            'endDate': '02/14/2025',
+            'lists': []
+        },
+        {
+            'id': 3,
+            'user': 2,
+            'name': 'Boston',
+            'startDate': '02/01/2025',
+            'endDate': '02/14/2025',
+            'lists': []
         }
     ],
     lists: [
         {
             'id': 1,
             'user': 1,
-            'listName': 'Sightseeing in Paris',
+            'name': 'Sightseeing in Paris',
             'trip': 1,
             'locations': ['Eiffel Tower', 'The Louvre', 'Arc de Triumphe']
         },
         {
             'id': 2,
             'user': 1,
-            'listName': 'My Favourite Restaurants in Toronto',
+            'name': 'My Favourite Restaurants in Toronto',
             'trip': null,
             'locations': ['Luis H', 'Enoteca Sociale', 'PG Clucks']
+        },
+        {
+            'id': 3,
+            'user': 2,
+            'name': 'Dive Bars',
+            'trip': null,
+            'locations': ['Mezzrows', 'Ted\'s Collision', 'Farside']
         }
     ],
     profiles: [

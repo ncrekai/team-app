@@ -1,40 +1,36 @@
-import { useParams, useOutletContext, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { useParams, useOutletContext, useNavigate } from 'react-router-dom';
 import { EditItemText, EditItemSelect } from '../components/EditItem';
 
-const ListEdit = () => {
+const ListNew = () => {
    const navigate = useNavigate();
    const id = useParams().id;
-   const lists = useOutletContext().lists
-   const listIndex = lists.findIndex((arr) => arr.id == id);
-   const list = lists[listIndex];
-
    const trips = useOutletContext().trips;
 
-   const [newListData, setNewListData] = useState({});
-
-   useEffect(() => console.log(newListData), [newListData]);
+   const [listData, setListData] = useState({ id: null, user: id, name: '', trip: null, locations: [] });
 
    const handleInput = (name, value) => {
-      setNewListData({ ...newListData, [name]: value });
+      setListData({ ...listData, [name]: value });
    };
+
+   useEffect(() => console.log(listData), [listData]);
 
    const handleSubmit = async (e) => {
       e.preventDefault();
       console.log('...pretending to send to api...');
-      const updatedData = { ...list, ...newListData };
-      const jsonBody = JSON.stringify(updatedData);
+      // const updatedData = { ...trip, ...newTripData };
+      const jsonBody = JSON.stringify(listData);
       console.log(jsonBody);
       navigate('/dashboard');
    };
-
+   
    return (
       <div className='page-inner'>
          <div className='page lists'>
-            <div className='page-title'>Edit List</div>
+            <div className='page-title'>New List</div>
             <form className='form-container' onSubmit={handleSubmit}>
-              <EditItemText name='name' val={list.name} display='List Name' handleInput={handleInput} />
-              <EditItemSelect name='trip' val={trips} current={list.trip} display='Linked Trips' 
+              <EditItemText name='name' val='' display='List Name' handleInput={handleInput} />
+              <EditItemSelect name='trip' val={trips} current={null} display='Linked Trip' 
                 multiple={false} handleInput={handleInput} />
                 <p>(Editing / creating list locations is not built yet)</p>
                <div className='input-container'>
@@ -46,4 +42,4 @@ const ListEdit = () => {
    );
 };
 
-export default ListEdit;
+export default ListNew;

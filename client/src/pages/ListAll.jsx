@@ -1,18 +1,22 @@
-import { useParams} from "react-router-dom";
-    
+import { useParams, useOutletContext } from 'react-router-dom';
+import { DisplayList } from '../components/DisplayBoxes';
+
 const ListAll = () => {
-  const routeParams = useParams()
-    console.log(routeParams)
-    return (
-      <div id='dashboard' className='page-outer'>
-        <div className='page-inner'>
-            <div className='lists'>
-                    <div className='page-title'>My Lists</div>
-                    <div className='list-container'></div>
+   const id = useParams().id;
+   const lists = useOutletContext().lists;
+
+   return (
+      <div className='page-inner'>
+         <div className='page lists'>
+            <div className='page-title'>All My Lists</div>
+            <div className='body-container'>
+               {lists.map((list, i) => (
+                  <DisplayList key={`list-${i}`} list={list} />
+               ))}
             </div>
-        </div>
+         </div>
       </div>
-    );
-  };
-  export default ListAll;
-  
+   );
+};
+
+export default ListAll;

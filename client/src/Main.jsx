@@ -1,6 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { createBrowserRouter, RouterProvider, createRoutesFromElements, Route } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import App from './App';
 import Error from './pages/Error';
@@ -11,19 +11,37 @@ import Register from './pages/Register';
 import ListView from './pages/ListView';
 import ListEdit from './pages/ListEdit';
 import ListAll from './pages/ListAll';
+import ListNew from './pages/ListNew';
 import TripView from './pages/TripView';
 import TripEdit from './pages/TripEdit';
 import TripAll from './pages/TripAll';
+import TripNew from './pages/TripNew';
 import ProfileView from './pages/ProfileView';
 import ProfileEdit from './pages/ProfileEdit';
 
+// import { getUser } from './users'
 import './index.css'
+
+// const userLoader = async () => {
+//   const res = await fetch('/api/contacts')
+//   return await res.json()
+// }
 
 const router = createBrowserRouter([
   {
     path: '/*',
     element: <App />,
     errorElement: <Error />,
+    loader: async () => {
+      const res = await fetch('/api/contacts')
+      return await res.json()
+    },
+    // () => {
+      // return getUser(1)
+      // fetch('/api/contacts')
+      // .then(res => res.json())
+      // .then(data => setDb(data))
+    // }, // userId temporarily assigned until login function created 
     children: [
       {
         index: true,
@@ -46,6 +64,10 @@ const router = createBrowserRouter([
         element: <ListView/>
       },
       {
+        path: 'user/:userId/lists/new',
+        element: <ListNew/>
+      },
+      {
         path: 'user/:userId/lists/:id/edit',
         element: <ListEdit/>
       },
@@ -56,6 +78,10 @@ const router = createBrowserRouter([
       {
         path: 'user/:userId/trips/:id',
         element: <TripView/>
+      },
+      {
+        path: 'user/:userId/trips/new',
+        element: <TripNew/>
       },
       {
         path: 'user/:userId/trips/:id/edit',
@@ -78,31 +104,8 @@ const router = createBrowserRouter([
 ]);
 
 
-// const router = createBrowserRouter(
-//   createRoutesFromElements(
-//     <Route path='/' element={<App/>}>
-//       <Route index element={ <Home/> }/>
-//           <Route path='dashboard' element={ <Dashboard /> }/>
-//           <Route path='user/:userId/lists/:id' element={ <ListView/> }/>
-//           <Route path='user/:userId/trips/:id' element={ <TripView/> }/>
-//           <Route path='user/:userId/lists/:id/edit' element={ <ListEdit/> }/>
-//           <Route path='user/:userId/trips/:id/edit' element={ <TripEdit/> }/>
-//           <Route path='user/:userId/lists' element={ <ListAll/> }/>
-//           <Route path='user/:userId/trips' element={ <TripAll/> }/>
-//           <Route path='register' element={ <Register/> }/>
-//           <Route path='login' element={ <Login /> } />
-//           <Route path='user/:id' element={ <ProfileView/> }/>
-//           <Route path='user/:id/edit' element={ <ProfileEdit/> }/>
-//           <Route path='*' element={ <Error/> } />
-//     </Route>
-//   )
-// )
-
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <RouterProvider router={router} />
-    {/* <BrowserRouter>
-      <App />
-    </BrowserRouter> */}
   </StrictMode>,
 )

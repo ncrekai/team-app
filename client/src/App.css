@@ -5,7 +5,6 @@
     display: flex;
 }
 .nav-container {
-    
     width: 100%;
     padding: 10px;
 }
@@ -41,9 +40,21 @@
     justify-content: space-evenly;
 }
 
-p, h1, h2, h3, h4, ul, li {
+p, h1, h2, h3, h4, ul, li, div, a {
+    font-family: "Dosis", sans-serif;
+    font-style: normal;
+    font-optical-sizing: auto;
    margin: 0;
    padding: 0;
+}
+h4 {
+    font-size: 18px;
+    padding: 5px 0;
+}
+a {
+    font-size: 17px;
+    color:#250fb2;
+    font-weight: 500;
 }
 
 .page-container {
@@ -52,18 +63,33 @@ p, h1, h2, h3, h4, ul, li {
     height: calc(100vh - 100px)
 }
 
-.page-container, .page-outer, .page-inner {
+.page-container, .page-inner {
     width: 100%;
     border: none;
     margin: 0;
     padding: 0;
 }
-.page, .register-container form, .login-container form, .input-container, .dashboard-container {
+.page, .register-container form, .input-container, .dashboard-container, .body-container {
     width: 100%;
     flex-flow: column nowrap;
     align-items: center;
+    justify-content: flex-start;
+    flex: 1;
+}
+.body-container form, .form-container {
+    width: 100%;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+}
+.trip-body {
+    width: 100%;
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-content: flex-start;
+    flex: 1;
 }
 .page-inner {
+    flex-flow: column nowrap;
     padding: 10px;
 }
 .page {
@@ -72,16 +98,38 @@ p, h1, h2, h3, h4, ul, li {
     flex: 1;
     background: #fff;
 }
-.page-title {
+.page-title, .page-title a {
     font-size: 26px;
     font-weight: 600;
     padding: 15px 0;
+}
+
+.page-subtitle {
+    width: 100%;
+    text-align: left;
+    font-size: 22px;
+    font-weight: 600;
+    padding: 15px 0 5px;
 }
 
 .input-container {
     flex: 1;
     padding: 10px;
     align-items: flex-start;
+    flex-flow: row wrap;
+    gap: 10px;
+}
+.check, .cancel {
+    font-size: 20px;
+    line-height: 20px;
+    font-weight: 600;
+    border: 1px #222 solid;
+    margin: 5px;
+    padding: 5px;
+    width: 30px;
+    height: 30px;
+    justify-content: center;
+    align-items: center;
 }
 .input-text {
     height: 40px;
@@ -114,7 +162,28 @@ span.required {
     justify-content: space-between;
     padding: 10px;
 }
-
-* {
-    /* border: #8e8e8e 1px dashed; */
+.checkbox-display, .radio-display {
+    flex-flow: column nowrap;
+    gap: 15px;
+    font-size: 18px;
+    padding: 5px 0;
+}
+.checkbox-display>div, .radio-display>div {
+    flex-flow: row nowrap;
+    /* flex: 1; */
+    gap: 10px
+}
+.location-list {
+    width: 100%;
+    flex-flow: column nowrap;
+}
+.location-list > div{
+    border: 1px #222 solid;
+    padding: 10px;
+    margin: 10px;
+}
+.return {
+    flex-flow: row nowrap;
+    justify-content: space-evenly;
+    width: 100%;
 }
