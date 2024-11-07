@@ -1,7 +1,7 @@
 const Contact = require('../models/Contact.js');
 
 // Create a new contact
-const create = async (req, res) => {
+exports.createContact = async (req, res) => {
     const { firstName, lastName, email, phone, user, trip } = req.body;
 
     // Validate required fields
@@ -19,7 +19,7 @@ const create = async (req, res) => {
 };
 
 // List all contacts for a user
-const list = async(req,res)=> {
+exports.getContacts = async(req,res)=> {
     try {
         let contacts = await Contact.find().select('firstname lastname email');
         res.json(contacts);
@@ -29,7 +29,7 @@ const list = async(req,res)=> {
 }
 
 // Get a specific contact by ID
-const contactById = async(req,res,next,id)=> {
+exports.getContactById = async(req,res,next,id)=> {
     try {
         let contact = await Contact.findById(id);
         if (!contact) return res.json({ error:"Contact doesn't exist" })
@@ -41,12 +41,12 @@ const contactById = async(req,res,next,id)=> {
 }
 
 // Read a specific contact
-const read = (req,res) => {
+exports.read = (req,res) => {
     return res.status(200).json(req.profile);
 }
 
 // Update a contact
-const update = async(req,res) => {
+exports.updateContact = async(req,res) => {
     try {
         let contact = req.profile
         let merge = Object.assign(contact, req.body)
@@ -57,24 +57,25 @@ const update = async(req,res) => {
     }
 }
 
-// Delete a contact
-const remove = async(req,res) => {
+// Delete a contact by ID
+exports.deleteContact = async(req,res) => {
     try {
-        let contact = req.profile
-        let deletedContact = await contact.deleteOne()
-        return res.status(200).json({ message: "Contact deleted successfully", deletedContact });
-    } catch(err) {
-        return res.status(500).json({ error: err.message || "Error while deleting contact" });
+        const contact = await Contact.findByIdAndDelete(req.profile._id);
+        if (!contact) {
+            return res.status(404).json({ message: "Contact not found" });
+        }
+        res.status(200).json({ message: "Contact deleted successfully" });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
 }
 
-const removeAll = async(req,res) => {
+exports.deleteAllContacts = async(req,res) => {
     try {
-        const result = await Contact.deleteMany({ user: req.params.userId });
-        return res.status(200).json({ message: `${result.deletedCount} contacts deleted` });
-    } catch (err) {
-        return res.status(500).json({ error: err.message || "Error while deleting all contacts" });
+        await Contact.deleteMany();
+        res.status(200).json({ message: "All Contacts deleted successfully" });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
-}
 
-module.exports = {create, list, contactById, read, update, remove, removeAll}
+}

@@ -1,14 +1,11 @@
-const contactCntrl = require('../controller/Contact.js')
-const express = require('express')
+const express = require('express');
 const router = express.Router();
+const contactController = require('../controller/Contact');
 
-router.param('contactId', contactCntrl.contactById)
-
-router.route('/').get(contactCntrl.list) // GET
-router.route('/:contactId').get(contactCntrl.read) // GET
-router.route('/').post(contactCntrl.create) // POST
-router.route('/:contactId').put(contactCntrl.update) // PUT
-router.route('/:contactId').delete(contactCntrl.remove) // DELETE
-router.route('/').delete(contactCntrl.removeAll) // DELETE
-
+router.post('/', contactController.createContact);
+router.get('/', contactController.getContacts);
+router.get('/:id', contactController.getContactById);
+router.put('/:id', contactController.updateContact);
+router.delete('/:id', contactController.deleteContact); // Delete by ID
+router.delete('/', contactController.deleteAllContacts); // Delete all
 module.exports = router;
