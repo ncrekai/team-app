@@ -27,11 +27,12 @@ const ContactSchema = new mongoose.Schema({
         ref: 'User',
         required: true,
     },
-    trip: {
+    // Allow the contact to be associated with multiple trips
+    trips: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Trip',
         required: false,
-    },
+    }],
     created: {
         type: Date,
         default: Date.now,
