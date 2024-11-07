@@ -1,78 +1,71 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
-const SALT_ROUNDS = 10; // the number of iterations the hashing function performs on the password and salt.
+const SALT_ROUNDS = 10;
 
 const UserSchema = new mongoose.Schema({
     name: {
         type: String,
         trim: true,
-        required: 'Name is required'
+        required: 'Name is required',
     },
     email: {
         type: String,
         trim: true,
         unique: 'Email already exists',
-        match: [/.+@.+\..+/, 'Please fill a vadil email address'],
-        required: 'Email is required'
+        match: [/.+@.+\..+/, 'Please fill a valid email address'],
+        required: 'Email is required',
     },
     created: {
         type: Date,
-        default: Date.now
+        default: Date.now,
     },
     updated: {
         type: Date,
-        default: Date.now
+        default: Date.now,
     },
-    hashedPassword: {
+    password: {
         type: String,
-        required: 'Password is required'
+        required: 'Password is required',
     },
-    salt: String,
-    // Trips user has created or is involved in
     trips: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Trip'
+        ref: 'Trip',
     }],
-    // Trips user has saved for later
     savedTrips: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Trip'
-    }]
+        ref: 'Trip',
+    }],
 });
 
-UserSchema.virtual('password')
-    .set((password) => {
-        this._password = password;
+// Virtual field for setting and getting the plain password
+UserSchema.virtual('_password')
+    .set(function(password) {
+        this.__password = password; // Store the plain password in a temporary field
     })
-    .get(() => {
-        this._password
+    .get(function() {
+        return this.__password; // Retrieve the plain password when needed
     });
 
 // Password validation
-UserSchema.path('hashedPassword').validate((v) => {
-    if (this._password && this._password.length < 8) {
-        this.invalidate('password', 'Password should be more than 8 characters')
-    }
-    if (this.isNew && !this._password) {
-        this.invalidate('password', 'password is required')
-    }
-}, null)
-
-//  Check if the password has been modified
 UserSchema.pre('save', function(next) {
-    if (this.isModified('hashedPassword')) {
-        bcrypt.hash(this.hashedPassword, SALT_ROUNDS, (err, hashedPassword) => {
-            // If there's an error during hashing, pass it to the next middleware
+    // Check if the plain password is set before hashing it
+    if (this.__password) {
+        if (this.__password.length < 8) {
+            return next(new Error('Password should be more than 8 characters'));
+        }
+        bcrypt.hash(this.__password, SALT_ROUNDS, (err, hashedPassword) => {
             if (err) return next(err);
-            // Set the hashed password on the document
-            this.hashedPassword = hashedPassword;
-            // Optionally update the 'updated' timestamp
-            this.updated = Date.now();
+            this.password = hashedPassword; // Save the hashed password to the password field
+            this.updated = Date.now(); // Update the timestamp
             next();
         });
     } else {
-        next(); // If the password hasn't changed, just proceed without modification
-    }
-});
+    next();
+ }});
+
+// Method to compare plain password with hashed password
+UserSchema.methods.comparePassword = function(password) {
+    return bcrypt.compare(password, this.password);
+};
 
 module.exports = mongoose.model('User', UserSchema);

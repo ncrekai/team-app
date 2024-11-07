@@ -1,94 +1,81 @@
-const User = require('../models/User.js');
+const User = require('../models/User');
 
-const create = async(req,res) => {
-    const { name, email, hashedPassword } = req.body;
-    // Check if required fields are missing
-    if (!name || !email || !hashedPassword) {
-        return res.status(400).json({ error: "Name, email, and password are required." });
-    }
-
-    // Create a new User document from the request body
-    const user = new User(req.body)
+exports.createUser = async (req, res) => {
     try {
-        await user.save()
-        return res.json({ message:"User added successfully" })
-    } catch(err) {
-        return res.status(500).json({ error: err.message });
+        const user = new User(req.body);
+        await user.save();
+        res.json({ message: "User Created  successfully", user: user });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
     }
-}
+};
 
-const list = async(req,res)=> {
-    try{
-        // Find all users and select the fields to be returned
-        let users = await User.find().select('name email updated created');
-        res.json(users);
-    } catch(err) {
-        return res.status(500).json({ error: err.message });
-    }
-}
-
-// Middleware to find a user by their ID
-const userById = async(req, res, next, id)=> {
+//get all users
+exports.getUsers = async (req, res) => {
     try {
-        // Find the user by their ID
-        const user = await User.findById(id).populate('trips');
+        const users = await User.find();
+        res.status(200).json(users);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+//get user by his/her id
+exports.getUserById = async (req, res) => {
+    try {
+        const userId = req.params.id;
+        const user = await User.findById(userId);
+
         if (!user) {
-            return res.json({ error:"User doesn't exist" })
+            return res.status(404).json({ message: "User not found" });
         }
-        req.profile = user
-        next()
-    } catch(err) {
-        return res.status(500).json({ error: err.message });
+
+        res.status(200).json(user);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
 }
 
-const read = (req,res) => {
-    req.profile.hashedPassword = undefined
-    req.profile.salt = undefined
-    return res.json(req.profile)
-}
+//PUT
+// Update user by ID
+exports.updateUser = async (req, res) => {
+    try {
+        const userId = req.params.id;
+        const updateData = req.body;
 
-const update = async(req,res) => {
-    try{
-        let user = req.profile
-        let merge = Object.assign(user, req.body)
-        user.updated = Date.now()
-        await user.save()
-        user.hashedPassword = undefined
-        user.salt  = undefined
-        res.json(user)
-    } catch(err) {
-        return res.status(500).json({ error: err.message });
-    }
-}
+        const updatedUser = await User.findByIdAndUpdate(userId, updateData, {
+            new: true, // Return the updated document
+            runValidators: true // Validate before saving
+        });
 
-const remove = async(req,res) => {
-    try{
-        let user = req.profile
-        // Delete the user from the database
-        let deletedUser = await user.deleteOne()
-        deletedUser.hashedPassword = undefined
-        deletedUser.salt = undefined
-        res.json(deletedUser)
-    } catch(err) {
-        return res.status(500).json({ error: err.message });
-    }
-}
-
-const removeAll = async(req,res) => {
-    try{
-        let users = await User.find()
-        // Iterate over all users and delete each one
-        for (let user of users) {
-            let deletedUser = await user.deleteOne();
-            deletedUser.hashedPassword = undefined;
-            deletedUser.salt = undefined;
+        if (!updatedUser) {
+            return res.status(404).json({ message: "User not found" });
         }
-        return res.json({ message: "All users have been deleted successfully." });
-
-    } catch(err) {
-        return res.status(500).json({ error: err.message });
+        res.json({ message: "User Updated successfully", user: updatedUser });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
     }
-}
+};
 
-module.exports = {create, list, userById, read, update, remove, removeAll}
+// Delete all users
+exports.deleteUser = async (req, res) => {
+    try {
+        const user = await User.findByIdAndDelete(req.params.id)
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+        res.status(200).json({ message: "User deleted successfully" });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// Delete all users
+exports.deleteAllUsers = async (req, res) => {
+    try {
+        await User.deleteMany();
+        res.status(200).json({ message: "All users deleted successfully" });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
