@@ -1,14 +1,14 @@
-const userCntrl = require('../controller/User.js')
-const express = require('express')
+const express= require('express')
 const router = express.Router();
+const userCntrl = require('../controller/User')
 
-router.param('tripId', userCntrl.userById);
+router.param('userId', userCntrl.userById);
 
-router.route('/api/users').get(userCntrl.list) // GET
-router.route('/api/users/:userId').get(userCntrl.read) // GET
-router.route('/api/users').post(userCntrl.create) // POST
-router.route('/api/users/:userId').put(userCntrl.update) // PUT
-router.route('/api/users/:userId').delete(userCntrl.remove) // DELETE
-router.route('/api/users').delete(userCntrl.removeAll) // DELETE
+router.route('/').get(userCntrl.list) // GET
+router.route('/:userId').get(userCntrl.read) // GET
+router.route('/').post(userCntrl.create) // POST
+router.route('/:userId').put(userCntrl.update) // PUT
+router.route('/:userId').delete(userCntrl.remove) // DELETE
+router.route('/').delete(userCntrl.removeAll) // DELETE
 
 module.exports = router;
