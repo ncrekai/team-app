@@ -21,15 +21,11 @@ const TripSchema = new mongoose.Schema({
     createdBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: 'Creator is required'
+        required: [true, 'CreatedBy is required'],
     },
     description: {
         type: String,
         trim: true
-    },
-    created: {
-        type: Date,
-        default: Date.now
     },
     updated: {
         type: Date,

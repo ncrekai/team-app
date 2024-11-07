@@ -1,15 +1,14 @@
 const User = require('../models/User.js');
 
 const create = async(req,res) => {
-    const { name, email, password } = req.body;
+    const { name, email, hashedPassword } = req.body;
     // Check if required fields are missing
-    if (!name || !email || !password) {
+    if (!name || !email || !hashedPassword) {
         return res.status(400).json({ error: "Name, email, and password are required." });
     }
 
     // Create a new User document from the request body
     const user = new User(req.body)
-
     try {
         await user.save()
         return res.json({ message:"User added successfully" })
@@ -32,8 +31,10 @@ const list = async(req,res)=> {
 const userById = async(req, res, next, id)=> {
     try {
         // Find the user by their ID
-        const user = await User.findById(id);
-        if (!user) return res.json({ error:"User doesn't exist" })
+        const user = await User.findById(id).populate('trips');
+        if (!user) {
+            return res.json({ error:"User doesn't exist" })
+        }
         req.profile = user
         next()
     } catch(err) {
@@ -42,7 +43,7 @@ const userById = async(req, res, next, id)=> {
 }
 
 const read = (req,res) => {
-    req.profile.hashed_password = undefined
+    req.profile.hashedPassword = undefined
     req.profile.salt = undefined
     return res.json(req.profile)
 }
@@ -53,7 +54,7 @@ const update = async(req,res) => {
         let merge = Object.assign(user, req.body)
         user.updated = Date.now()
         await user.save()
-        user.hashed_password = undefined
+        user.hashedPassword = undefined
         user.salt  = undefined
         res.json(user)
     } catch(err) {
@@ -66,7 +67,7 @@ const remove = async(req,res) => {
         let user = req.profile
         // Delete the user from the database
         let deletedUser = await user.deleteOne()
-        deletedUser.hashed_password = undefined
+        deletedUser.hashedPassword = undefined
         deletedUser.salt = undefined
         res.json(deletedUser)
     } catch(err) {

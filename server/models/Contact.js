@@ -27,10 +27,10 @@ const ContactSchema = new mongoose.Schema({
         ref: 'User',
         required: true,
     },
-    trip: { // Add trip reference here
+    trip: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Trip',
-        required: false, // Optional if not every contact will be associated with a trip
+        required: false,
     },
     created: {
         type: Date,

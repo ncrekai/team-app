@@ -43,7 +43,7 @@ UserSchema.virtual('password')
     });
 
 // Password validation
-UserSchema.path('hashedPasswords').validate((v) => {
+UserSchema.path('hashedPassword').validate((v) => {
     if (this._password && this._password.length < 8) {
         this.invalidate('password', 'Password should be more than 8 characters')
     }

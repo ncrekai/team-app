@@ -1,5 +1,5 @@
 const Trip = require('../models/Trip'); // Import the Trip model
-
+const User = require('../models/User');
 // Create a new trip
 const create = async (req, res) => {
     const { name, destination, startDate, endDate, description, createdBy } = req.body;
@@ -10,8 +10,14 @@ const create = async (req, res) => {
     }
 
     try {
+        const user = await User.findById(createdBy)
         const trip = new Trip({ name, destination, startDate, endDate, description, createdBy });
         await trip.save();
+
+        // Add the trip to the user's trips array
+        user.trips.push(trip._id);
+        await user.save();
+
         return res.status(201).json({ message: "Trip added successfully", trip });
     } catch (err) {
         return res.status(500).json({ error: err.message || "Error while adding trip" });
