@@ -51,11 +51,17 @@ exports.read = (req,res) => {
 // Update a contact
 exports.updateContact = async(req,res) => {
     try {
-        let contact = req.profile
-        let merge = Object.assign(contact, req.body)
-        await contact.save()
-        res.json(contact)
-    } catch(err) {
+        let contact = req.profile;
+        // Merge the new values from req.body into the existing contact
+        let updatedContact = Object.assign(contact, req.body);
+        await updatedContact.save();    // Save the updated contact
+
+        // Return the updated contact as the response
+        res.json({
+            message: "Contact updated successfully",
+            contact: updatedContact
+        });
+    } catch (err) {
         return res.status(500).json({ error: err.message || "Error while updating contact" });
     }
 }
