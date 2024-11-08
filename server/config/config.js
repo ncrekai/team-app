@@ -20,3 +20,5 @@ const config = {
 
 // Export the config object so it can be used in other parts of the application
 module.exports = config;
+
+// MongoDB had to be set to open access

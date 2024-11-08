@@ -25,7 +25,19 @@ exports.createUser = async (req, res) => {
 exports.getUsers = async (req, res) => {
     try {
         const users = await User.find();
-        res.status(200).json(users);
+        //formatted GET list for better clarity
+        const formattedUsers = users.map(user => ({
+            _id: user._id,
+            name: user.name,
+            email:user.email,
+            password: user.password,
+            created: user.created,
+            updated: user.updated,
+            trips: user.trips,
+            savedTrips: user.savedTrips,
+            __v: user.__v
+        }));
+        res.status(200).json(formattedUsers);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

@@ -32,10 +32,12 @@ const UserSchema = new mongoose.Schema({
         ref: 'Profile',
         unique: true,    // Ensures a user can have only one profile
     },
+    //Trips actively plannet (upcoming)
     trips: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Trip',
     }],
+    //Past trips as well as wishlisted trips
     savedTrips: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Trip',

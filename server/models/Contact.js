@@ -22,6 +22,7 @@ const ContactSchema = new mongoose.Schema({
         match: [/.+\@.+\..+/, 'Please fill a vadil email address'],
         required: 'Email is required'
     },
+    //User to be replaced at future date with username(?)
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',

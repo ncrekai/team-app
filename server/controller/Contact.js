@@ -20,9 +20,10 @@ exports.createContact = async (req, res) => {
 };
 
 // List all contacts for a user
+// N of firstName and lastName had to be capitalized
 exports.getAllContacts = async(req,res)=> {
     try {
-        let contacts = await Contact.find().select('firstName lastName email');
+        let contacts = await Contact.find().select('firstName lastName user email');
         res.json(contacts);
     } catch(err) {
         return res.status(500).json({ error: err.message || "Error while retrieving contacts" });
