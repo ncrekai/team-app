@@ -29,12 +29,18 @@ import './index.css'
 
 const router = createBrowserRouter([
   {
-    path: '/*',
+    path: '/',
     element: <App />,
     errorElement: <Error />,
     loader: async () => {
-      const res = await fetch('/api/contacts')
-      return await res.json()
+      try {
+        const res = await fetch('/api/contacts');
+        if (!res.ok) throw new Error('Failed to load contacts');
+        return await res.json();
+      } catch (error) {
+        console.error('Loader error:', error);
+        return null;
+      }
     },
     // () => {
       // return getUser(1)

@@ -1,6 +1,7 @@
 {
   "name": "server",
   "version": "1.0.0",
+  "type": "commonjs",
   "description": "server file",
   "main": "server.js",
   "dependencies": {
@@ -14,7 +15,7 @@
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
-    "express": "4.21.1",
+    "express": "^4.21.1",
     "global": "4.4.0",
     "helmet": "^8.0.0",
     "jsonwebtoken": "^9.0.2",

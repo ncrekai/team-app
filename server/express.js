@@ -46,6 +46,16 @@ app.get('/api/v1', (req, res) => {
     });
 });
 
+app.get('/api/contacts', async (req, res) => {
+  try{
+    const contacts = await Contact.find();
+    res.json(contacts);
+  } catch (error) {
+    console.error("Error fetching contacts:", error);
+    res.status(500).json({error: "Internal Server Error"});
+  }
+});
+
 app.get('/*',function (req,res){
   res.sendFile(path.join(__dirname,'../public','index.html'))
 });
