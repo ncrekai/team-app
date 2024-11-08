@@ -1,24 +1,24 @@
-import { Routes, Route } from 'react-router-dom'
-import './App.css'
+import { Outlet, useLoaderData } from 'react-router-dom';
 
-import Layout from './components/Layout';
-import Home from './pages/Home';
-import Error from './pages/Error';
+import './App.css';
+import Nav from './components/Nav';
+import { getUser } from './users';
 
 const App = () => {
 
-  // Define Router index and paths for navbar
-  
+  // const allUsers = useLoaderData() // confirmed able to retrieve from api
+  const user = getUser(1) // temporary function for userById data until db connected
+
   return (
     <div id='App' className='app-container'>
-        <Routes>
-          <Route path='/' element={ <Layout/> }>
-            <Route index element={ <Home/> }/>
-            <Route path='*' element={ <Error/> } />
-          </Route>
-        </Routes>
+      <Nav id={user.id} />
+      <div id='Page' className='page-container'>
+        <Outlet context={ user }/>
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default App
+
+
+export default App;
