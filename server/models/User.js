@@ -37,11 +37,7 @@ const UserSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Trip',
     }],
-    //Past trips as well as wishlisted trips
-    savedTrips: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Trip',
-    }],
+
 });
 
 // Pre-save hook to hash the password if it’s new or modified
