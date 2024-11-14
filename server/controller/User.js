@@ -59,6 +59,7 @@ exports.getUserById = async (req, res) => {
     }
 }
 
+//PUT
 // Update user by ID
 exports.updateUser = async (req, res) => {
     try {
@@ -79,26 +80,6 @@ exports.updateUser = async (req, res) => {
     }
 };
 
-// Add an item to the user's general wishlist
-exports.addWishlistItem = async (req, res) => {
-    try {
-        const userId = req.params.id;
-        const { name, type, details } = req.body;
-
-        const user = await User.findById(userId);
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
-
-        // Add new item to the generalWishlist array
-        user.generalWishlist.push({ name, type, details });
-        await user.save();
-
-        res.status(201).json({ message: "Wishlist item added successfully", generalWishlist: user.generalWishlist });
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
 // Delete all users
 exports.deleteUser = async (req, res) => {
     try {
