@@ -32,11 +32,19 @@ const UserSchema = new mongoose.Schema({
         ref: 'Profile',
         unique: true,    // Ensures a user can have only one profile
     },
-    //Trips actively plannet (upcoming)
+    //Trips actively planned (upcoming)
     trips: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Trip',
     }],
+    // General wishlist for places to visit in the future (outside of specific trips)
+    generalWishlist: [
+        {
+            name: { type: String, required: true },       // Name of the place or item
+            type: { type: String },                       // type of item (e.g., "Attraction", "Places")
+            details: { type: String },                    // location / description
+            addedOn: { type: Date, default: Date.now }    // Timestamp when the item was added
+        }]
 
 });
 
