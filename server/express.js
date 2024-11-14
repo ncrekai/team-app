@@ -35,7 +35,7 @@ app.use('/src',assetsRouter);
 app.use('/users', userRoutes);
 app.use('/trips', tripRoutes);
 app.use('/profiles', profileRoutes);
-app.use('/wishlists', wishlistRoutes);
+app.use('/', wishlistRoutes);
 app.use('/api/auth', authRoutes);
 
 // API endpoint
