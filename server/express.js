@@ -32,7 +32,6 @@ app.use('/src',assetsRouter);
 
 // Use route handlers
 app.use('/users', userRoutes);
-app.use('/contacts', contactRoutes);
 app.use('/trips', tripRoutes);
 app.use('/profiles', profileRoutes);
 app.use('/api/auth', authRoutes);
