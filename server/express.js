@@ -9,7 +9,6 @@ const helmet = require('helmet');
 // Import routes
 const assetsRouter = require("./assets-router");
 const userRoutes = require ('./routes/User')
-const contactRoutes = require ('./routes/Contact')
 const tripRoutes = require ('./routes/Trip')
 const profileRoutes = require ('./routes/Profile')
 const authRoutes = require ('./routes/authRoutes')
