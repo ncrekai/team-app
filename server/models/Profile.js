@@ -12,7 +12,7 @@ const profileSchema = new mongoose.Schema(
         },
         tripWishlist: [{
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Wishlist'  // Reference to wishlist items for a trip
+            ref: 'Wishlist'  //  a wishlist for a planned trip
         }],
         // Travel Preference
         preferences: {

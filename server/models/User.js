@@ -41,8 +41,12 @@ const UserSchema = new mongoose.Schema({
     generalWishlist: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Wishlist'
+    }],
+    // Wishlist for a planned trip
+    tripWishlist: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Wishlist'
     }]
-
 });
 
 // Pre-save hook to hash the password if it’s new or modified
