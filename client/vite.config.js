@@ -14,7 +14,11 @@ export default defineConfig({
     origin: 'http://localhost:5173',
     proxy: {
       '/api': {
+<<<<<<< HEAD
         target: 'http://localhost:5000',
+=======
+        target: 'http://localhost:4000',
+>>>>>>> 354f47d (Home, Nav, App modified)
         changeOrigin: true,
       },
     },

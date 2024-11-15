@@ -1,22 +1,31 @@
 import { Link } from 'react-router-dom';
+import backgroundImage from '../assets/bg2.png';
 
 const Home = () => {
-
    return (
-      <div className='page-inner'>
-         <div className='page'>
-            <div className='page-title'>
-               <Link to='/dashboard'>Dashboard</Link>
+      <div className="page-inner">
+         <div className="page"
+         
+         style={{
+            backgroundImage: `url(${backgroundImage})`,
+            backgroundSize: 'cover', // Ensures the image scales properly
+            backgroundPosition: 'center', // Centers the image
+            backgroundRepeat: 'no-repeat', // Prevents repeating the image
+            padding: '10px', // Optional: added padding as needed
+          }}
+         >
+            {/* App Name */}
+            <div className="home-header">
+               <h1 className="app-name">Travel Planning App</h1>
             </div>
-            <div className='page-title'>
-               <Link to='/register'>Register</Link>
+            <p className="app-tagline">"Plan your dream journey with ease!" </p>
+            
+            {/* Navigation Links */}
+            <div className="home-links">
+               <Link to="/dashboard" className="home-link">Dashboard</Link>
+               <Link to="/register" className="home-link">Register</Link>
+               <Link to="/login" className="home-link">Sign In</Link>
             </div>
-            <div className='page-title'>
-               <Link to='/login'>Sign In</Link>
-            </div>
-            <em>
-               <br />* Temporary landing page until log-in is set up
-            </em>
          </div>
       </div>
    );
