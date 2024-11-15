@@ -38,6 +38,12 @@ app.use('/profiles', profileRoutes);
 app.use('/', wishlistRoutes);
 app.use('/api/auth', authRoutes);
 
+// enable CORS to allow requests from your frontend
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true
+}));
+
 // API endpoint
 app.get('/api/v1', (req, res) => {
     res.json({
