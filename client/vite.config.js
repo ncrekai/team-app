@@ -9,14 +9,14 @@ export default defineConfig({
     rollupOptions: {
       input: './src/Main.jsx'
     }
-  },
-  server: {
-    origin: 'http://localhost:3000',
-    proxy: {
-      '/api': {
-        target: 'http://localhost:4000',
-        changeOrigin: true,
-      },
-    },
   }
+  // server: {
+  //   origin: 'http://localhost:3000',
+  //   proxy: {
+  //     '/api': {
+  //       target: 'http://localhost:4000',
+  //       changeOrigin: true,
+  //     },
+  //   },
+  // }
 })

@@ -33,22 +33,7 @@ const router = createBrowserRouter([
     path: '/',
     element: <App />,
     errorElement: <Error />,
-    loader: async () => {
-      try {
-        const res = await fetch('/api/contacts');
-        if (!res.ok) throw new Error('Failed to load contacts');
-        return await res.json();
-      } catch (error) {
-        console.error('Loader error:', error);
-        return null;
-      }
-    },
-    // () => {
-      // return getUser(1)
-      // fetch('/api/contacts')
-      // .then(res => res.json())
-      // .then(data => setDb(data))
-    // }, // userId temporarily assigned until login function created 
+    
     children: [
       {
         index: true,
