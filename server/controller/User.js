@@ -59,7 +59,6 @@ exports.getUserById = async (req, res) => {
     }
 }
 
-//PUT
 // Update user by ID
 exports.updateUser = async (req, res) => {
     try {

@@ -10,6 +10,10 @@ const profileSchema = new mongoose.Schema(
             required: true,
             unique: true,  // A user can only have one profile
         },
+        tripWishlist: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Wishlist'  //  a wishlist for a planned trip
+        }],
         // Travel Preference
         preferences: {
             destinations: {
@@ -29,20 +33,12 @@ const profileSchema = new mongoose.Schema(
                 default: [],
             },
         },
-
         // Profile Picture
         profilePicture: {
             type: String,
             default: '',  // Empty string if no picture uploaded
         },
 
-        // Saved Trips (optional)
-        savedTrips: [
-            {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'Trip',
-            },
-        ],
     },
     { timestamps: true }  // Adds createdAt and updatedAt fields automatically
 );

@@ -1,14 +1,14 @@
 import { generatePath, Link } from 'react-router-dom';
-import { useState } from 'react';
+import {useContext, useState} from 'react';
 import home from '../assets/home-icon.svg';
 import menu from '../assets/menu.svg';
+import {AuthContext} from "../services/authContext.jsx";
 
 const Nav = ({ id }) => {
   const [displayMenu, setDisplayMenu] = useState(false);
   const toggleDropdown = () => setDisplayMenu(!displayMenu);
   const listPath = generatePath('user/:id/lists', {id})
   const tripPath = generatePath('user/:id/trips', {id})
-  
 
   return (
     <div id='Nav' className='nav-container'>
@@ -53,6 +53,8 @@ const NavMiddle = ({ id }) => {
   const newTripPath = generatePath('user/:id/trips/new', {id})
   const newListPath = generatePath('user/:id/lists/new', {id})
   const editProfilePath = generatePath('user/:id/edit', {id})
+  // handle logout function
+  const { handleLogout } = useContext(AuthContext);
 
   return (
     <div className='nav-middle'>
@@ -60,7 +62,7 @@ const NavMiddle = ({ id }) => {
         <div className='dropdown-link'><Link to={editProfilePath}>Edit Profile</Link></div>
         <div className='dropdown-link'><Link to={newTripPath}>New Trip</Link></div>
         <div className='dropdown-link'><Link to={newListPath}>New List</Link></div>
-        <div className='dropdown-link'><Link to='/'>Logout</Link></div>
+        <div className='dropdown-link'><Link to="/login" onClick={handleLogout}>Logout</Link></div>
       </div>
     </div>
   );

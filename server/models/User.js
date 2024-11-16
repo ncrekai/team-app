@@ -32,16 +32,21 @@ const UserSchema = new mongoose.Schema({
         ref: 'Profile',
         unique: true,    // Ensures a user can have only one profile
     },
-    //Trips actively plannet (upcoming)
+    //Trips actively planned (upcoming)
     trips: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Trip',
     }],
-    //Past trips as well as wishlisted trips
-    savedTrips: [{
+    // General wishlist for places to visit in the future (outside specific trips)
+    generalWishlist: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Trip',
+        ref: 'Wishlist'
     }],
+    // Wishlist for a planned trip
+    tripWishlist: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Wishlist'
+    }]
 });
 
 // Pre-save hook to hash the password if it’s new or modified

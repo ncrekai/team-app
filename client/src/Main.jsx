@@ -21,6 +21,7 @@ import ProfileEdit from './pages/ProfileEdit';
 
 // import { getUser } from './users'
 import './index.css'
+import {AuthProvider} from "./services/authContext.jsx";
 
 // const userLoader = async () => {
 //   const res = await fetch('/api/contacts')
@@ -112,6 +113,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </StrictMode>,
 )
