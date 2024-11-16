@@ -2,7 +2,7 @@ const Trip = require('../models/Trip'); // Import the Trip model
 const User = require('../models/User');
 // Create a new trip
 exports.createTrip = async (req, res) => {
-    const { name, destination, startDate, endDate, description, createdBy } = req.body;
+    const { name, destination, startDate, endDate, description, createdBy, wishlistId } = req.body;
 
     // Validate required fields
     if (!name || !destination || !startDate || !endDate || !createdBy) {
@@ -10,10 +10,23 @@ exports.createTrip = async (req, res) => {
     }
 
     try {
-        const user = await User.findById(createdBy)
-        const trip = new Trip({ name, destination, startDate, endDate, description, createdBy });
-        await trip.save();
+        const user = await User.findById(createdBy);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
 
+        const trip = new Trip({ name, destination, startDate, endDate, description, createdBy });
+
+        // If a wishlist is provided, associate it with the trip
+        if (wishlistId) {
+            const wishlist = await Wishlist.findById(wishlistId);
+            if (!wishlist) {
+                return res.status(404).json({ error: 'Wishlist not found' });
+            }
+            trip.wishlist = wishlistId;
+        }
+
+        await trip.save();
         // Add the trip to the user's trips array
         user.trips.push(trip._id);
         await user.save();
@@ -23,6 +36,7 @@ exports.createTrip = async (req, res) => {
         return res.status(500).json({ error: err.message || "Error while adding trip" });
     }
 };
+
 
 // List all trips
 exports.getAllTrips = async (req, res) => {
@@ -37,13 +51,13 @@ exports.getAllTrips = async (req, res) => {
 // Get a single trip by ID
 exports.getTripById = async (req, res, next, id) => {
     try {
-        const trip = await Trip.findById(id)
+        const trip = await Trip.findById(id).populate('tripWishlist');
         if (!trip) {
             return res.status(404).json({ message: "Trip not found" });
         }
-        // Attach the trip to the request object
+
+        // Attach trip to the request object
         req.trip = trip;
-        // Call the next middleware or controller function
         next();
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -53,6 +67,35 @@ exports.getTripById = async (req, res, next, id) => {
 // Read a trip
 exports.read = (req, res) => {
     return res.json(req.trip);
+};
+
+// add a wishlist to specific trip
+exports.addWishlistToTrip = async (req, res) => {
+    const { tripId } = req.params;
+    const { wishlistId } = req.body;
+    try {
+        const trip = await Trip.findById(tripId);
+        if (!trip) {
+            return res.status(404).json({ message: 'Trip not found' });
+        }
+
+        // Check if the wishlist is already associated with the trip
+        if (trip.wishlists && trip.wishlists.includes(wishlistId)) {
+            return res.status(400).json({ message: 'Wishlist is already associated with this trip' });
+        }
+
+        // Add the wishlist to the trip's wishlists array
+        trip.tripWishlist.push(wishlistId);
+        await trip.save();
+
+        return res.status(200).json({
+            message: 'Wishlist added to trip successfully',
+            trip: trip,
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Error adding wishlist to trip', error: error.message });
+    }
 };
 
 exports.updateTrip = async (req, res) => {

@@ -9,15 +9,15 @@ const helmet = require('helmet');
 // Import routes
 const assetsRouter = require("./assets-router");
 const userRoutes = require ('./routes/User')
-const contactRoutes = require ('./routes/Contact')
 const tripRoutes = require ('./routes/Trip')
 const profileRoutes = require ('./routes/Profile')
 const authRoutes = require ('./routes/authRoutes')
+const wishlistRoutes = require ('./routes/Wishlist')
 
 // Initialize the app
 const app = express()
 
-// Use middleware to handle JSON and URL-encoded data
+// Use middleware to handle JSON and URL-encoded data, wishlistRoutes
 app.use(express.json());
 app.use(express.urlencoded({extended:true}))
 
@@ -33,10 +33,16 @@ app.use('/src',assetsRouter);
 
 // Use route handlers
 app.use('/users', userRoutes);
-app.use('/contacts', contactRoutes);
 app.use('/trips', tripRoutes);
 app.use('/profiles', profileRoutes);
+app.use('/', wishlistRoutes);
 app.use('/api/auth', authRoutes);
+
+// enable CORS to allow requests from your frontend
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true
+}));
 
 // API endpoint
 app.get('/api/v1', (req, res) => {
