@@ -3,12 +3,13 @@ import { useState, useEffect, useContext } from 'react';
 import {AuthContext} from "../services/authContext.jsx";
 import ReturnEdit from '../components/ReturnEdit';
 import { getListById } from '../services/listsApi.jsx'
+/*
 import landmark from '../assets/003-landmark.png';
 import activity from '../assets/004-hiking.png';
 import restaurant from '../assets/002-restaurant.png';
 import hotel from '../assets/001-reception.png';
 import other from '../assets/005-map.png';
-
+*/
 const ListView = () => {
 
   const { user, token } = useContext(AuthContext);
