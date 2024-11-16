@@ -1,11 +1,12 @@
 import { generatePath } from 'react-router';
 import { Link } from 'react-router-dom';
 
-export const DisplayTrip = ({ trip }) => {
-  const path = generatePath('../user/:id/:entity/:entityId', {
-    id: trip.user,
-    entity: 'trips',
-    entityId: trip.id
+export const DisplayTrip = ({ user, trip }) => {
+  // console.log(user)
+  // console.log(trip.name)
+  const path = generatePath('../user/:id/trips/:tripid', {
+    id: user,
+    tripid: trip._id
   })
   return (
     <div className='dashboard-display'>
@@ -16,12 +17,13 @@ export const DisplayTrip = ({ trip }) => {
   )
 }
 
-export const DisplayList = ({ list }) => {
+export const DisplayList = ({ user, list }) => {
+  console.log(user)
   const path = generatePath('../user/:id/:entity/:entityId', {
-    id: list.user,
-    entity: 'lists',
-    entityId: list.id
-  })
+     id: user,
+     entity: 'wishlists',
+     entityId: list._id
+   })
   return (
     <div className='dashboard-display'>
       <div><Link to={path}>{list.name}</Link></div>
