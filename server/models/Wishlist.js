@@ -41,7 +41,13 @@ const WishlistSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: 'WishlistItem'
         }
-    ]
+    ],
+    // to classify the wishlist as general/ trip
+    type: {
+        type: String,
+        enum: ['general', 'trip'],
+        required: true,
+    }
 });
 
 const WishlistItem = mongoose.model('WishlistItem', WishlistItemSchema);

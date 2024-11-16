@@ -1,10 +1,11 @@
 const { Wishlist, WishlistItem } = require('../models/Wishlist');
 const User = require('../models/User');
 
-// Add a new Wishlist to the user
+// Add a new Wishlist (general or trip) to the user
 exports.addWishlist = async (req, res) => {
     const { userId } = req.params;
-    const { name, items } = req.body;
+    // Add type to specify wishlist type (general or trip)
+    const { name, items, type } = req.body;
 
     try {
         // Step 1: Validation of items array
@@ -37,13 +38,20 @@ exports.addWishlist = async (req, res) => {
 
         await wishlist.save();
 
-        // Step 4: Add Wishlist to the user's general wishlist
+        // Step 4: Add Wishlist to the correct field (general or trip) in the user's schema
         const user = await User.findById(userId);
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        user.generalWishlist.push(wishlist);
+        if (type === 'general') {
+            user.generalWishlist.push(wishlist);
+        } else if (type === 'trip') {
+            user.tripWishlist.push(wishlist);
+        } else {
+            return res.status(400).json({ message: 'Invalid wishlist type' });
+        }
+
         await user.save();
 
         res.status(201).json({
@@ -60,12 +68,14 @@ exports.addWishlist = async (req, res) => {
     }
 };
 
-// Get all wishlists for a user
+// Get all wishlists (general or trip) for a user
 exports.getWishlists = async (req, res) => {
     const { userId } = req.params;
+    // 'general' or 'trip'
+    const { type } = req.query;
 
     try {
-        // Populate both generalWishlist and tripWishlist
+        // Populate the correct wishlist based on type
         const user = await User.findById(userId)
             .populate({
                 path: 'generalWishlist',
@@ -80,10 +90,19 @@ exports.getWishlists = async (req, res) => {
             return res.status(404).json({ message: 'User not found' });
         }
 
+        // Return the correct wishlist based on type
+        let wishlists = [];
+        if (type === 'general') {
+            wishlists = user.generalWishlist;
+        } else if (type === 'trip') {
+            wishlists = user.tripWishlist;
+        } else {
+            return res.status(400).json({ message: 'Invalid wishlist type' });
+        }
+
         res.status(200).json({
             message: 'Wishlists fetched successfully',
-            generalWishlist: user.generalWishlist,
-            tripWishlist: user.tripWishlist,
+            wishlists: wishlists,
         });
     } catch (error) {
         console.error(error);
@@ -157,12 +176,20 @@ exports.deleteWishlist = async (req, res) => {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        const wishlistIndex = user.generalWishlist.indexOf(wishlistId);
-        if (wishlistIndex === -1) {
+        // Find and remove the wishlist from the correct array based on type
+        const generalIndex = user.generalWishlist.indexOf(wishlistId);
+        const tripIndex = user.tripWishlist.indexOf(wishlistId);
+
+        if (generalIndex === -1 && tripIndex === -1) {
             return res.status(404).json({ message: 'Wishlist not found in user\'s wishlist' });
         }
 
-        user.generalWishlist.splice(wishlistIndex, 1);
+        if (generalIndex !== -1) {
+            user.generalWishlist.splice(generalIndex, 1);
+        } else if (tripIndex !== -1) {
+            user.tripWishlist.splice(tripIndex, 1);
+        }
+
         await user.save();
 
         const wishlist = await Wishlist.findById(wishlistId);

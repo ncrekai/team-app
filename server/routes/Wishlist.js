@@ -3,26 +3,26 @@ const router = express.Router();
 const wishlistController = require('../controller/Wishlist');
 
 // Routes for managing wishlists for a specific user
-// Add a new wishlist to a user
-router.post('/users/:userId/wishlists', wishlistController.addWishlist);
+// Add a new wishlist to a user, specifying type as 'general' or 'trip'
+router.post('/users/:userId/:type(general-wishlists|trip-wishlists)', wishlistController.addWishlist);
 
-// Get all wishlists for a user
-router.get('/users/:userId/wishlists', wishlistController.getWishlists);
+// Get all wishlists for a user by type ('general' for general wishlists, 'trip' for trip-specific)
+router.get('/users/:userId/:type(wishlists|trip-wishlists)', wishlistController.getWishlists);
 
 // Get a specific wishlist by ID
-router.get('/wishlists/:wishlistId', wishlistController.getWishlistById);
+router.get('/:type(wishlists|trip-wishlists)/:wishlistId', wishlistController.getWishlistById);
 
-// Update a wishlist
-router.put('/users/:userId/wishlists/:wishlistId', wishlistController.updateWishlist);
+// Update a wishlist by type
+router.put('/users/:userId/:type(wishlists|trip-wishlists)/:wishlistId', wishlistController.updateWishlist);
 
-// Delete a wishlist
-router.delete('/users/:userId/wishlists/:wishlistId', wishlistController.deleteWishlist);
+// Delete a wishlist by type
+router.delete('/users/:userId/:type(wishlists|trip-wishlists)/:wishlistId', wishlistController.deleteWishlist);
 
 // Routes for managing wishlist items
-// Add an item to a wishlist
-router.post('/users/:userId/wishlists/:wishlistId/items', wishlistController.addWishlistItem);
+// Add an item to a wishlist by type
+router.post('/users/:userId/:type(wishlists|trip-wishlists)/:wishlistId/items', wishlistController.addWishlistItem);
 
-// Delete an item from a wishlist
-router.delete('/users/:userId/wishlists/:wishlistId/items/:itemId', wishlistController.deleteWishlistItem);
+// Delete an item from a wishlist by type
+router.delete('/users/:userId/:type(wishlists|trip-wishlists)/:wishlistId/items/:itemId', wishlistController.deleteWishlistItem);
 
 module.exports = router;
