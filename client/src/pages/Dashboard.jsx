@@ -26,7 +26,7 @@ const Dashboard = () => {
 
    useEffect(() => {
       fetchTrips()
-      fetchList()
+      fetchLists()
    }, [profile])
 
    const fetchTrips = async () => {
@@ -39,7 +39,7 @@ const Dashboard = () => {
       }
    }
 
-   const fetchList = async () => {
+   const fetchLists = async () => {
       try {
          const lists = await getUserLists(user.userId, token)
          const allLists = lists.generalWishlist.concat(lists.tripWishlist)

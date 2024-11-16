@@ -13,3 +13,15 @@ export const getUserLists = async (userId, token) => {
         throw new Error('Error getting profile');
     }
 }
+
+export const getListById = async (listId, userId, token) => {
+    try {
+        const response = await Axios.get(`${API_URL}/wishlists/${listId}`, {
+            headers: { Authorization: `Bearer ${token}` }
+        })
+        return response.data;
+    } catch(error) {
+        console.log(error);
+        throw new Error('Error getting list');
+    }
+ }

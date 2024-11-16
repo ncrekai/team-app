@@ -52,19 +52,19 @@ const router = createBrowserRouter([
         element: <Register />
       },
       {
-        path: 'user/:userId/lists/:id',
+        path: 'user/:userId/wishlists/:id',
         element: <ListView/>
       },
       {
-        path: 'user/:userId/lists/new',
+        path: 'user/:userId/wishlists/new',
         element: <ListNew/>
       },
       {
-        path: 'user/:userId/lists/:id/edit',
+        path: 'user/:userId/wishlists/:id/edit',
         element: <ListEdit/>
       },
       {
-        path: 'user/:userId/lists',
+        path: 'user/:userId/wishlists',
         element: <ListAll/>
       },
       {
