@@ -3,8 +3,17 @@ const Profile = require('../models/Profile');
 
 exports.createUser = async (req, res) => {
     try {
+        const { username, email, password } = req.body;
+        
+        console.log('Request body:', req.body);
+
+        // Check required fields
+        if (!username || !password || !email) {
+            return res.status(400).json({ message: "Username, password, and email are required" });
+        }
+
         // Create a new user
-        const user = new User(req.body);
+        const user = new User({ username, email, password });
         await user.save();
 
         // Create a new profile
@@ -28,7 +37,7 @@ exports.getUsers = async (req, res) => {
         //formatted GET list for better clarity
         const formattedUsers = users.map(user => ({
             _id: user._id,
-            name: user.name,
+            username: user.username,
             email:user.email,
             password: user.password,
             created: user.created,

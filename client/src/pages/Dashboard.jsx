@@ -1,5 +1,6 @@
 import { useOutletContext, Link, generatePath } from 'react-router-dom';
 import { DisplayTrip, DisplayList, DisplayProfile } from '../components/DisplayBoxes';
+
 import {useContext, useEffect, useState} from "react";
 import {AuthContext} from "../services/authContext.jsx";
 import {getProfile} from "../services/profileApi.jsx";
@@ -74,6 +75,7 @@ const Dashboard = () => {
          </div>
       );
    }
+
 };
 
 export default Dashboard;

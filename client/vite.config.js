@@ -9,6 +9,7 @@ export default defineConfig({
     rollupOptions: {
       input: './src/Main.jsx'
     }
+
   }
   // server: {
   //   origin: 'http://localhost:3000',

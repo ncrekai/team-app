@@ -1,7 +1,8 @@
 import { generatePath, Link } from 'react-router-dom';
-import {useContext, useState} from 'react';
+import { useState } from 'react';
 import home from '../assets/home-icon.svg';
 import menu from '../assets/menu.svg';
+
 import {AuthContext} from "../services/authContext.jsx";
 import teamLogo from '../assets/logo.png';  // import the logo image
 import backgroundImage from '../assets/bg.png';
@@ -11,8 +12,10 @@ const Nav = ({ id }) => {
   const [displayMenu, setDisplayMenu] = useState(false);
   const toggleDropdown = () => setDisplayMenu(!displayMenu);
 
+
   const listPath = generatePath('user/:id/lists', {id})
   const tripPath = generatePath('user/:id/trips', {id})
+
 
 
   return (
@@ -71,7 +74,9 @@ const Nav = ({ id }) => {
 };
 
 const NavMiddle = ({ id }) => {
+
  const newTripPath = generatePath('user/:id/trips/new', { id });
+
   const newListPath = generatePath('user/:id/lists/new', { id });
   const editProfilePath = generatePath('user/:id/edit', { id });
 
