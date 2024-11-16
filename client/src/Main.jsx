@@ -21,7 +21,6 @@ import ProfileEdit from './pages/ProfileEdit';
 
 // import { getUser } from './users'
 import './index.css'
-import {AuthProvider} from "./services/authContext.jsx";
 
 // const userLoader = async () => {
 //   const res = await fetch('/api/contacts')
@@ -33,6 +32,7 @@ const router = createBrowserRouter([
     path: '/',
     element: <App />,
     errorElement: <Error />,
+    /*
     loader: async () => {
       try {
         const res = await fetch('/api/contacts');
@@ -42,7 +42,7 @@ const router = createBrowserRouter([
         console.error('Loader error:', error);
         return null;
       }
-    },
+    },*/
     // () => {
       // return getUser(1)
       // fetch('/api/contacts')
@@ -113,8 +113,6 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <AuthProvider>
-      <RouterProvider router={router} />
-    </AuthProvider>
+    <RouterProvider router={router} />
   </StrictMode>,
 )

@@ -5,8 +5,8 @@ const config = {
     // Set the environment, defaulting to 'development' if NODE_ENV is not specified
     env: process.env.NODE_ENV || 'development',
 
-    // Set the server port, defaulting to 5000 if PORT is not specified
-    PORT: process.env.PORT || 5000,
+    // Set the server port, defaulting to 4000 if PORT is not specified
+    PORT: process.env.PORT || 4000,
 
     // JWT secret key for signing and verifying tokens, pulled from the .env file
     jwtSecret: process.env.JWT_SECRET,
