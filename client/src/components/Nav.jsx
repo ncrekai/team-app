@@ -3,15 +3,30 @@ import {useContext, useState} from 'react';
 import home from '../assets/home-icon.svg';
 import menu from '../assets/menu.svg';
 import {AuthContext} from "../services/authContext.jsx";
+import teamLogo from '../assets/logo.png';  // import the logo image
+import backgroundImage from '../assets/bg.png';
+
 
 const Nav = ({ id }) => {
   const [displayMenu, setDisplayMenu] = useState(false);
   const toggleDropdown = () => setDisplayMenu(!displayMenu);
+
   const listPath = generatePath('user/:id/lists', {id})
   const tripPath = generatePath('user/:id/trips', {id})
 
+
   return (
-    <div id='Nav' className='nav-container'>
+    <div
+      id="Nav"
+      className="nav-container"
+      style={{
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: 'cover', // Ensures the image scales properly
+        backgroundPosition: 'center', // Centers the image
+        backgroundRepeat: 'no-repeat', // Prevents repeating the image
+        padding: '10px', // Optional: added padding as needed
+      }}
+    >
       <div className='nav-inner'>
         <div className='nav-upper'>
           <div className='home-container'>
@@ -22,7 +37,10 @@ const Nav = ({ id }) => {
             </div>
           </div>
           <div className='title-container'>
-            <h3>Team 5 Travel App</h3>
+            <Link to='/dashboard'>
+              <img src={teamLogo} alt="Team 5 Logo" className="team-logo" />
+            </Link>
+            <h3>Travel App</h3>
           </div>
           <div className='nav-bars'>
             <div onClick={toggleDropdown} className='menu-icon'>
@@ -30,7 +48,10 @@ const Nav = ({ id }) => {
             </div>
           </div>
         </div>
-        {displayMenu ? <NavMiddle id={id}/> : null}
+
+        {/* Right-Side Dropdown */}
+        {displayMenu && <NavMiddle id={id} />}
+
         <div className='nav-lower'>
           <div className='list-container'>
             <div className='main-nav'>
@@ -50,19 +71,25 @@ const Nav = ({ id }) => {
 };
 
 const NavMiddle = ({ id }) => {
-  const newTripPath = generatePath('user/:id/trips/new', {id})
-  const newListPath = generatePath('user/:id/lists/new', {id})
-  const editProfilePath = generatePath('user/:id/edit', {id})
-  // handle logout function
-  const { handleLogout } = useContext(AuthContext);
+ const newTripPath = generatePath('user/:id/trips/new', { id });
+  const newListPath = generatePath('user/:id/lists/new', { id });
+  const editProfilePath = generatePath('user/:id/edit', { id });
 
   return (
-    <div className='nav-middle'>
-      <div className='dropdown-container'>
-        <div className='dropdown-link'><Link to={editProfilePath}>Edit Profile</Link></div>
-        <div className='dropdown-link'><Link to={newTripPath}>New Trip</Link></div>
-        <div className='dropdown-link'><Link to={newListPath}>New List</Link></div>
-        <div className='dropdown-link'><Link to="/login" onClick={handleLogout}>Logout</Link></div>
+    <div className="nav-middle-dropdown">
+      <div className="dropdown-container">
+        <div className="dropdown-link">
+          <Link to={editProfilePath}>Edit Profile</Link>
+        </div>
+        <div className="dropdown-link">
+          <Link to={newTripPath}>New Trip</Link>
+        </div>
+        <div className="dropdown-link">
+          <Link to={newListPath}>New List</Link>
+        </div>
+        <div className="dropdown-link">
+          <Link to="/">Logout</Link>
+        </div>
       </div>
     </div>
   );
