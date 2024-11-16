@@ -30,7 +30,11 @@ const TripSchema = new mongoose.Schema({
     updated: {
         type: Date,
         default: Date.now
-    }
+    },
+    tripWishlist: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Wishlist'
+    }]
 });
 
 // Pre-save hook to update the 'updated' field on modification
