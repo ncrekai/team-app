@@ -73,7 +73,8 @@ exports.getWishlists = async (req, res) => {
     const { userId } = req.params;
     // 'general' or 'trip'
     const { type } = req.query;
-
+    console.log(req.query)
+    console.log(type)
     try {
         // Populate the correct wishlist based on type
         const user = await User.findById(userId)
@@ -139,6 +140,7 @@ exports.getWishlistById = async (req, res) => {
 // Update a wishlist
 exports.updateWishlist = async (req, res) => {
     const { wishlistId } = req.params;
+    console.log(req.body)
     const { name } = req.body;
 
     try {

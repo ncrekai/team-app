@@ -51,7 +51,6 @@ exports.getAllTrips = async (req, res) => {
 // Get a single trip by ID
 exports.getTripById = async (req, res, next, id) => {
     try {
-        console.log(id)
         const trip = await Trip.findById(id).populate('tripWishlist');
         if (!trip) {
             return res.status(404).json({ message: "Trip not found" });
@@ -74,7 +73,6 @@ exports.read = (req, res) => {
 exports.addWishlistToTrip = async (req, res) => {
     const { tripId } = req.params;
     const { wishlistId } = req.body;
-
     try {
         const trip = await Trip.findById(tripId);
         if (!trip) {
@@ -87,7 +85,7 @@ exports.addWishlistToTrip = async (req, res) => {
         }
 
         // Add the wishlist to the trip's wishlists array
-        trip.wishlists.push(wishlistId);
+        trip.tripWishlist.push(wishlistId);
         await trip.save();
 
         return res.status(200).json({

@@ -3,10 +3,10 @@ const router = express.Router();
 const tripController = require('../controller/Trip');
 
 // Middleware to get the trip by ID and populate req.trip
-router.param('/:id', tripController.getTripById);
+router.param('id', tripController.getTripById);
 
 // Add a wishlist to a specific trip
-router.put('/:id/trip-wishlists', tripController.addWishlistToTrip);
+router.put('/:tripId/trip-wishlists', tripController.addWishlistToTrip);
 
 // Route to create a new trip (POST)
 router.post('/', tripController.createTrip);
