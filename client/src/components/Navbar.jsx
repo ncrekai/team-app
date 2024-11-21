@@ -2,13 +2,12 @@ import { useState } from 'react';
 import { AppBar, Toolbar, Button, Avatar, Box, Link, IconButton, Drawer, List, ListItem, ListItemText } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import logo from '../assets/logo.png';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
-import '../App.css';
+import { useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
     // Track if the user is signed in or not
     const [isSignedIn, setIsSignedIn] = useState(false);
-    const [openDrawer, setOpenDrawer] = useState(false); // State to control Drawer (hamburger menu)
+    const [openDrawer, setOpenDrawer] = useState(false);
     const navigate = useNavigate(); // Use useNavigate hook for redirection
 
     // Toggle sign-in/sign-out and handle redirection
@@ -52,7 +51,7 @@ const Navbar = () => {
                 </Box>
 
                 <Box sx={{ display: { xs: 'none', md: 'block' } }}>
-                    <Button color="inherit" onClick={handleAuthToggle}>
+                    <Button color="success" variant="outlined" onClick={handleAuthToggle}>
                         {isSignedIn ? 'Sign Out' : 'Register'}
                     </Button>
                 </Box>
