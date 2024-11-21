@@ -4,40 +4,75 @@
 .app-container * {
     display: flex;
 }
-.nav-container {
-    width: 100%;
-    padding: 10px;
+
+/* Style the navbar */
+.navbar {
+    background-color: white !important;
+    box-shadow: none;
+    color: #333 !important;
 }
-.nav-inner {
-    flex: 1;
-    flex-flow: column nowrap
+.MuiButtonBase-root.planButton {
+    background-color: #F0707D;
+    max-width: 200px;
+    font-weight: bold;
+    color: white;
+    padding: 1rem;
+    margin-top: 20px;
 }
-.nav-upper, .nav-lower {
-    flex-flow: row nowrap;
-    flex: 0 0 40px;
+/* Style the hero section */
+.heroContainer {
+    overflow: hidden;
+    display: flex;
     justify-content: space-between;
     align-items: center;
+    height: 80vh;
+    padding: 0 40px;
+    flex-direction: row; /* Align text and image horizontally */
 }
-.nav-middle {
-    flex: 1;
-    flex-flow: row nowrap;
 
+/* Media query for screen widths 900px and below */
+@media (max-width: 900px) {
+    .heroContainer {
+        flex-direction: column; /* Change to column on screens smaller than 900px */
+        align-items: center; /* Center the items */
+        padding: 0 20px; /* Adjust padding on mobile */
+    }
 }
-.logo, .menu-icon {
-    height: 30px;
-    width: 30px;
-}
-.dropdown-container {
+.leftContent {
+    margin-top: 10rem;
+    margin-left: 12rem;
+    max-width: 600px;
     flex: 1;
-    background: #fff;
-    flex-flow: column nowrap;
-    align-items: center;
-    
+    flex-direction: column;
+    justify-content: center;
 }
-.list-container {
+.heading {
+    font-weight: bold;
+    margin-bottom: 16px !important;
+    text-shadow: 2px 2px 4px #8BC4A4;
+}
+
+.planButton {
+    background-color: #F0707D !important;
+    max-width: 150px;
+    padding: 12px 20px;
+    margin-top: 20px;
+    border: 1px solid #F0707D;
+}
+
+.planButton:hover {
+    background-color: #F0707D;
+}
+
+.rightContent {
     flex: 1;
-    flex-flow: row nowrap;
-    justify-content: space-evenly;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.heroImage {
+    width: 35rem;
+    height: auto;
 }
 
 p, h1, h2, h3, h4, ul, li, div, a {

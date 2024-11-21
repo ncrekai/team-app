@@ -1,8 +1,9 @@
 import { Outlet, useLoaderData } from 'react-router-dom';
 
 import './App.css';
-import Nav from './components/Nav';
+import Navbar from './components/Navbar.jsx';
 import { getUser } from './users';
+import HeroSection from "./components/HeroSection.jsx";
 
 const App = () => {
 
@@ -11,10 +12,11 @@ const App = () => {
 
   return (
     <div id='App' className='app-container'>
-      <Nav id={user.id} />
-      <div id='Page' className='page-container'>
-        <Outlet context={ user }/>
-      </div>
+      <Navbar id={user.id} />
+      <HeroSection />
+      {/*<div id='Page' className='page-container'>*/}
+      {/*  <Outlet context={ user }/>*/}
+      {/*</div>*/}
     </div>
   );
 };

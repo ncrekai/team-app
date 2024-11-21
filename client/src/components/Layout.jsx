@@ -1,13 +1,13 @@
 // DELETE
 
 // import { Outlet } from 'react-router-dom';
-// import Nav from './Nav';
+// import Navbar from './Navbar';
 
 // const Layout = () => {
 //     // console.log(props)
 //     return (
 //         <>
-//             <Nav />
+//             <Navbar />
 //             <div id='Page' className='page-container'>
 //                 <Outlet />
 //             </div>

@@ -1,49 +1,55 @@
-import { Button, Typography, Box, Card, CardContent, CardMedia } from '@mui/material';
+import { Box, Typography, Button } from '@mui/material';
 import { makeStyles } from '@mui/styles';
+import heroImg from '../assets/heroImg.jpg';
 
-const useStyles = makeStyles((theme) => ({
-    heroSection: {
+
+const useStyles = makeStyles(() => ({
+    heroContainer: {
+        overflow: 'hidden',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        minHeight: '60vh',
-        padding: theme.spacing(4),
-        backgroundColor: '#f5f5f5',
+        height: '80vh',
+        padding: '0 40px',
+        flexDirection: 'row', // Align text and image horizontally
+        '@media (max-width: 900px)': {
+            flexDirection: 'column', // Change to column on screens smaller than 600px
+            alignItems: 'center', // Center the items
+            padding: '0 20px', // Adjust padding on mobile
+        },
     },
-    heroText: {
-        maxWidth: '50%',
-        paddingRight: theme.spacing(3),
+    leftContent: {
+        marginTop: '10rem',
+        marginLeft: '12rem',
+        maxWidth: '600px',
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center'
     },
     heading: {
-        fontSize: '3rem',
         fontWeight: 'bold',
-        color: theme.palette.primary.main,
+        color: '#333',
+        marginBottom: '16px',
+        textShadow: '2px 2px 4px #8BC4A4',
     },
-    subheading: {
-        marginTop: theme.spacing(2),
-        fontSize: '1.2rem',
-        color: theme.palette.text.primary,
+    planButton: {
+        backgroundColor: '#F0707D !important',
+        maxWidth: '150px',
+        padding: '12px 20px',
+        marginTop: '20px',
+        border: '1px solid #F0707D',
+        '&:hover': {
+            backgroundColor: '#F0707D',
+        },
     },
-    button: {
-        marginTop: theme.spacing(3),
-        padding: theme.spacing(1, 4),
-        fontSize: '1rem',
-    },
-    cardGrid: {
+    rightContent: {
+        flex: 1,
         display: 'flex',
-        justifyContent: 'space-around',
-        gap: theme.spacing(2),
+        justifyContent: 'flex-end',
     },
-    card: {
-        width: 250,
-        borderRadius: '10px',
-        boxShadow: theme.shadows[2],
-    },
-    cardMedia: {
-        height: 140,
-    },
-    cardText: {
-        textAlign: 'center',
+    heroImage: {
+        width: '35rem',
+        height: 'auto',
     },
 }));
 
@@ -51,40 +57,22 @@ const HeroSection = () => {
     const classes = useStyles();
 
     return (
-        <Box className={classes.heroSection}>
-            {/* Left Side - Heading and Button */}
-            <Box className={classes.heroText}>
-                <Typography variant="h1" className={classes.heading}>
-                    Explore Dream Destinations
+        <Box className='heroContainer'>
+            <Box className='leftContent'>
+                <Typography variant="h2">It&#39;s Time to</Typography>
+                <Typography variant="h1" className='heading'>Travel</Typography>
+                <Typography variant="h6" className='subheading'>
+                    planning your perfect getaway today and make your dream vacation a reality!
                 </Typography>
-                <Typography variant="h6" className={classes.subheading}>
-                    Discover breathtaking places around the world. Start your journey with us!
-                </Typography>
-                <Button variant="contained" color="primary" className={classes.button}>
-                    Plan Your Trip
-                </Button>
+                <Button className='planButton' to={'/register'}>Plan Your Trip</Button>
             </Box>
 
-            {/* Right Side - Cards */}
-            <Box className={classes.cardGrid}>
-                {[1, 2, 3].map((item) => (
-                    <Card key={item} className={classes.card}>
-                        <CardMedia
-                            component="img"
-                            alt="destination"
-                            className={classes.cardMedia}
-                            image={`https://via.placeholder.com/250x140?text=Destination+${item}`}
-                        />
-                        <CardContent>
-                            <Typography variant="h6" className={classes.cardText}>
-                                Destination {item}
-                            </Typography>
-                            <Typography variant="body2" className={classes.cardText}>
-                                Discover beautiful places to visit. A perfect vacation destination.
-                            </Typography>
-                        </CardContent>
-                    </Card>
-                ))}
+            <Box className='rightContent'>
+                <img
+                    className='heroImage'
+                    alt="hero img"
+                    src={heroImg}
+                />
             </Box>
         </Box>
     );
