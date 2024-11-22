@@ -12,7 +12,7 @@ const App = () => {
 
   return (
     <div id='App' className='app-container'>
-      <Navbar id={user.id} />
+      <Navbar/>
       <HeroSection />
       {/*<div id='Page' className='page-container'>*/}
       {/*  <Outlet context={ user }/>*/}
