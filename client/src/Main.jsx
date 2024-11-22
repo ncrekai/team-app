@@ -18,15 +18,9 @@ import TripAll from './pages/TripAll';
 import TripNew from './pages/TripNew';
 import ProfileView from './pages/ProfileView';
 import ProfileEdit from './pages/ProfileEdit';
-
-// import { getUser } from './users'
-import './index.css'
 import {AuthProvider} from "./services/authContext.jsx";
 
-// const userLoader = async () => {
-//   const res = await fetch('/api/contacts')
-//   return await res.json()
-// }
+import './index.css'
 
 const router = createBrowserRouter([
   {
