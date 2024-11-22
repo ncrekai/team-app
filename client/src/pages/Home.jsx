@@ -1,33 +1,29 @@
-import { Link } from 'react-router-dom';
-import backgroundImage from '../assets/bg2.png';
+import { Box, Typography, Button } from '@mui/material';
+import heroImg from '../assets/heroImg.jpg';
 
 const Home = () => {
+
    return (
-      <div className="page-inner">
-         <div className="page"
-         
-         style={{
-            backgroundImage: `url(${backgroundImage})`,
-            backgroundSize: 'cover', // Ensures the image scales properly
-            backgroundPosition: 'center', // Centers the image
-            backgroundRepeat: 'no-repeat', // Prevents repeating the image
-            padding: '10px', // Optional: added padding as needed
-          }}
-         >
-            {/* App Name */}
-            <div className="home-header">
-               <h1 className="app-name">Travel Planning App</h1>
-            </div>
-            <p className="app-tagline">"Plan your dream journey with ease!" </p>
-            
-            {/* Navigation Links */}
-            <div className="home-links">
-               <Link to="/dashboard" className="home-link">Dashboard</Link>
-               <Link to="/register" className="home-link">Register</Link>
-               <Link to="/login" className="home-link">Sign In</Link>
-            </div>
-         </div>
-      </div>
+       <Box className='landingContainer'>
+          <Box className='leftContent'>
+             <Typography variant="h2">
+                It&#39;s Time to
+             </Typography>
+             <Typography variant="h1" className='heading'>Travel</Typography>
+             <Typography variant="h6" className='subheading'>
+                planning your perfect getaway today and make your dream vacation a reality!
+             </Typography>
+             <Button className='planButton'>Plan Your Trip</Button>
+          </Box>
+
+          <Box className='rightContent'>
+             <img
+                 className='heroImage'
+                 alt="hero img"
+                 src={heroImg}
+             />
+          </Box>
+       </Box>
    );
 };
 

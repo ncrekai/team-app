@@ -20,7 +20,7 @@
     margin-top: 20px;
 }
 /* Style the hero section */
-.heroContainer {
+.landingContainer {
     overflow: hidden;
     display: flex;
     justify-content: space-between;
@@ -93,7 +93,7 @@ a {
 }
 
 .page-container {
-    background: #efefef;
+    background: #fff;
     align-items: stretch;
     height: calc(100vh - 100px)
 }
