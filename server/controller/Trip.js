@@ -37,7 +37,6 @@ exports.createTrip = async (req, res) => {
     }
 };
 
-
 // List all trips
 exports.getAllTrips = async (req, res) => {
     try {
@@ -45,6 +44,18 @@ exports.getAllTrips = async (req, res) => {
         return res.json(trips);
     } catch (err) {
         return res.status(500).json({ error: "Error while fetching trips" });
+    }
+};
+
+// Get a list of the user trips
+exports.getUserTrips = async (req, res) => {
+    const userId = req.params.userId;
+
+    try {
+        const userTrips = await Trip.find({ createdBy: userId });
+        res.status(200).json(userTrips);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching user trips', error });
     }
 };
 
