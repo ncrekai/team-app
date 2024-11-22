@@ -7,7 +7,7 @@ import { AuthContext } from '../services/authContext.jsx';
 
 const Navbar = () => {
     // Use AuthContext to get the current user, token, and logout function
-    const { user, token, handleLogout } = useContext(AuthContext);
+    const { user, handleLogout } = useContext(AuthContext);
     const [openDrawer, setOpenDrawer] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
     const navigate = useNavigate();
@@ -16,6 +16,7 @@ const Navbar = () => {
     const handleMyAccountClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
+
     const handleCloseMenu = () => {
         setAnchorEl(null);
     };
@@ -45,7 +46,7 @@ const Navbar = () => {
                     style={{ height: '55px', width: 'auto' }}
                 />
                 <Box sx={{ display: { xs: 'none', md: 'block' } }}>
-                    {token ? (
+                    {user ? (
                         <>
                             <Button
                                 variant="contained"
@@ -59,7 +60,7 @@ const Navbar = () => {
                                 open={Boolean(anchorEl)}
                                 onClose={handleCloseMenu}
                             >
-                                <MenuItem onClick={() => navigate('/profile')}>Profile</MenuItem>
+                                <MenuItem onClick={() => navigate(`/user/${user.id}`)}>Profile</MenuItem>
                                 <MenuItem onClick={() => navigate('/dashboard')}>Dashboard</MenuItem>
                                 <MenuItem onClick={handleLogoutClick}>Logout</MenuItem>
                             </Menu>
@@ -96,9 +97,9 @@ const Navbar = () => {
                     onKeyDown={toggleDrawer(false)}
                 >
                     <List>
-                        {token ? (
+                        {user ? (
                             <>
-                                <ListItem button onClick={() => navigate('/profile')}>
+                                <ListItem button onClick={() => navigate(`/user/${user.id}`)}>
                                     <ListItemText primary="Profile" />
                                 </ListItem>
                                 <ListItem button onClick={() => navigate('/dashboard')}>
