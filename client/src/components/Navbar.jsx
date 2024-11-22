@@ -1,28 +1,35 @@
-import { useState } from 'react';
-import { AppBar, Toolbar, Button, Avatar, Box, Link, IconButton, Drawer, List, ListItem, ListItemText } from '@mui/material';
+import { useState, useContext } from 'react';
+import { AppBar, Toolbar, Button, Avatar, Box, IconButton, Drawer, List, ListItem, ListItemText, Menu, MenuItem } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import logo from '../assets/logo.png';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../services/authContext.jsx';
 
 const Navbar = () => {
-    // Track if the user is signed in or not
-    const [isSignedIn, setIsSignedIn] = useState(false);
+    // Use AuthContext to get the current user, token, and logout function
+    const { user, token, handleLogout } = useContext(AuthContext);
     const [openDrawer, setOpenDrawer] = useState(false);
-    const navigate = useNavigate(); // Use useNavigate hook for redirection
+    const [anchorEl, setAnchorEl] = useState(null);
+    const navigate = useNavigate();
 
-    // Toggle sign-in/sign-out and handle redirection
-    const handleAuthToggle = () => {
-        if (isSignedIn) {
-            // When signed in, sign out and redirect to register page
-            // setIsSignedIn(false);
-            // navigate('/register');
-        } else {
-            // When signed out, redirect to sign-up page
-            navigate('/register');
-        }
+    // Handle "My Account" dropdown open/close
+    const handleMyAccountClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleCloseMenu = () => {
+        setAnchorEl(null);
     };
 
-    // Handle the hamburger menu
+    // Handle logout
+    const handleLogoutClick = () => {
+        // Call the logout function from AuthContext
+        handleLogout();
+        handleCloseMenu();
+        // Redirect to the landing page
+        navigate('/');
+    };
+
+    // Handle the hamburger menu toggle
     const toggleDrawer = (open) => () => {
         setOpenDrawer(open);
     };
@@ -37,26 +44,38 @@ const Navbar = () => {
                     alt="logo-img"
                     style={{ height: '55px', width: 'auto' }}
                 />
-                <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 3, flexGrow: 1, justifyContent: 'center' }}>
-                    {isSignedIn && (
+                <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+                    {token ? (
                         <>
-                            <Link href="/profile" color="inherit" underline="none">
-                                Profile
-                            </Link>
-                            <Link href="/dashboard" color="inherit" underline="none">
-                                Dashboard
-                            </Link>
+                            <Button
+                                variant="contained"
+                                color="success"
+                                onClick={handleMyAccountClick}
+                            >
+                                My Account
+                            </Button>
+                            <Menu
+                                anchorEl={anchorEl}
+                                open={Boolean(anchorEl)}
+                                onClose={handleCloseMenu}
+                            >
+                                <MenuItem onClick={() => navigate('/profile')}>Profile</MenuItem>
+                                <MenuItem onClick={() => navigate('/dashboard')}>Dashboard</MenuItem>
+                                <MenuItem onClick={handleLogoutClick}>Logout</MenuItem>
+                            </Menu>
                         </>
+                    ) : (
+                        <Button
+                            color="success"
+                            variant="outlined"
+                            onClick={() => navigate('/register')}
+                        >
+                            Register / Sign In
+                        </Button>
                     )}
                 </Box>
 
-                <Box sx={{ display: { xs: 'none', md: 'block' } }}>
-                    <Button color="success" variant="outlined" onClick={handleAuthToggle}>
-                        {isSignedIn ? 'Sign Out' : 'Register'}
-                    </Button>
-                </Box>
-
-                {/* Hamburger menu icon (only on mobile) */}
+                {/* Hamburger Menu Icon (Mobile Only) */}
                 <IconButton
                     edge="end"
                     color="inherit"
@@ -69,11 +88,7 @@ const Navbar = () => {
             </Toolbar>
 
             {/* Hamburger Menu */}
-            <Drawer
-                anchor="right"
-                open={openDrawer}
-                onClose={toggleDrawer(false)}
-            >
+            <Drawer anchor="right" open={openDrawer} onClose={toggleDrawer(false)}>
                 <Box
                     sx={{ width: 250 }}
                     role="presentation"
@@ -81,21 +96,24 @@ const Navbar = () => {
                     onKeyDown={toggleDrawer(false)}
                 >
                     <List>
-                        {/* Show Profile and Dashboard only when signed in */}
-                        {isSignedIn && (
+                        {token ? (
                             <>
-                                <ListItem button component="a" href="/profile">
+                                <ListItem button onClick={() => navigate('/profile')}>
                                     <ListItemText primary="Profile" />
                                 </ListItem>
-                                <ListItem button component="a" href="/dashboard">
+                                <ListItem button onClick={() => navigate('/dashboard')}>
                                     <ListItemText primary="Dashboard" />
                                 </ListItem>
+                                <ListItem button onClick={handleLogoutClick}>
+                                    <ListItemText primary="Logout" />
+                                </ListItem>
                             </>
+                        ) : (
+                            <ListItem button onClick={() => navigate('/register')}>
+                                <ListItemText primary="Register / Sign In" />
+                            </ListItem>
                         )}
                     </List>
-                    <ListItem button onClick={handleAuthToggle}>
-                        <ListItemText primary={isSignedIn ? 'Sign Out' : 'Register'} />
-                    </ListItem>
                 </Box>
             </Drawer>
         </AppBar>
