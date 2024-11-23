@@ -23,7 +23,7 @@ const Login = () => {
          // Call the login function from authService and update the context
          const response = await handleLogin(userLogin.email, userLogin.password);
          if (response.token) {
-            navigate('/');
+            navigate('/dashboard');
          }
       } catch (error) {
          console.error('Error during login:', error);
