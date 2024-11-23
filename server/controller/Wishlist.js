@@ -68,18 +68,18 @@ exports.getGeneralWishlists = async (req, res) => {
 
     try {
         const user = await User.findById(userId).populate('generalWishlist');
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+        if (!user || !user.generalWishlist) {
+            return res.status(404).json({ message: 'No general wishlists found for this user' });
         }
 
-        res.status(200).json({
-            message: 'General wishlists fetched successfully',
-            wishlists: user.generalWishlist,
-        });
+        // Filter only 'general' type wishlists
+        const generalWishlists = user.generalWishlist.filter(wishlist => wishlist.type === 'general');
+
+        res.status(200).json(generalWishlists);
     } catch (error) {
         console.error(error);
         res.status(500).json({
-            message: 'Failed to fetch general wishlists',
+            message: 'Failed to retrieve general wishlists',
             error: error.message,
         });
     }
@@ -91,117 +91,18 @@ exports.getTripWishlists = async (req, res) => {
 
     try {
         const user = await User.findById(userId).populate('tripWishlist');
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+        if (!user || !user.tripWishlist) {
+            return res.status(404).json({ message: 'No trip wishlists found for this user' });
         }
 
-        res.status(200).json({
-            message: 'Trip wishlists fetched successfully',
-            wishlists: user.tripWishlist,
-        });
+        // Filter only 'trip' type wishlists
+        const tripWishlists = user.tripWishlist.filter(wishlist => wishlist.type === 'trip');
+
+        res.status(200).json(tripWishlists);
     } catch (error) {
         console.error(error);
         res.status(500).json({
-            message: 'Failed to fetch trip wishlists',
-            error: error.message,
-        });
-    }
-};
-
-// Get a specific wishlist by ID
-exports.getWishlistById = async (req, res) => {
-    const { wishlistId } = req.params;
-
-    try {
-        const wishlist = await Wishlist.findById(wishlistId).populate('items');
-        if (!wishlist) {
-            return res.status(404).json({ message: 'Wishlist not found' });
-        }
-
-        res.status(200).json({
-            message: 'Wishlist fetched successfully',
-            wishlist: wishlist,
-        });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({
-            message: 'Failed to fetch wishlist',
-            error: error.message,
-        });
-    }
-};
-
-// Update a wishlist
-exports.updateWishlist = async (req, res) => {
-    const { wishlistId } = req.params;
-    console.log(req.body)
-    const { name } = req.body;
-
-    try {
-        const wishlist = await Wishlist.findById(wishlistId);
-        if (!wishlist) {
-            return res.status(404).json({ message: 'Wishlist not found' });
-        }
-
-        if (name) {
-            wishlist.name = name;
-        }
-
-        await wishlist.save();
-
-        res.status(200).json({
-            message: 'Wishlist updated successfully',
-            wishlist: wishlist,
-        });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({
-            message: 'Failed to update wishlist',
-            error: error.message,
-        });
-    }
-};
-
-// Delete a wishlist
-exports.deleteWishlists = async (req, res) => {
-    const { wishlistId, userId } = req.params;
-    try {
-        const user = await User.findById(userId);
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-
-        // Find and remove the wishlist from the correct array based on type
-        const generalIndex = user.generalWishlist.indexOf(wishlistId);
-        const tripIndex = user.tripWishlist.indexOf(wishlistId);
-
-        if (generalIndex === -1 && tripIndex === -1) {
-            return res.status(404).json({ message: 'Wishlist not found in user\'s wishlist' });
-        }
-
-        if (generalIndex !== -1) {
-            user.generalWishlist.splice(generalIndex, 1);
-        } else if (tripIndex !== -1) {
-            user.tripWishlist.splice(tripIndex, 1);
-        }
-
-        await user.save();
-
-        const wishlist = await Wishlist.findById(wishlistId);
-        if (!wishlist) {
-            return res.status(404).json({ message: 'Wishlist not found' });
-        }
-
-        await WishlistItem.deleteMany({ _id: { $in: wishlist.items } });
-        await wishlist.remove();
-
-        res.status(200).json({
-            message: 'Wishlist and associated items deleted successfully',
-        });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({
-            message: 'Failed to delete wishlist',
+            message: 'Failed to retrieve trip wishlists',
             error: error.message,
         });
     }
@@ -252,10 +153,58 @@ exports.addWishlistItem = async (req, res) => {
     }
 };
 
+// Update the wishlist && the wishlist item
+
+
+
+// Delete a wishlist
+exports.deleteWishlists = async (req, res) => {
+    const { wishlistId, userId } = req.params;
+    try {
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Find and remove the wishlist from the correct array based on type
+        const generalIndex = user.generalWishlist.indexOf(wishlistId);
+        const tripIndex = user.tripWishlist.indexOf(wishlistId);
+
+        if (generalIndex === -1 && tripIndex === -1) {
+            return res.status(404).json({ message: 'Wishlist not found in user\'s wishlist' });
+        }
+
+        if (generalIndex !== -1) {
+            user.generalWishlist.splice(generalIndex, 1);
+        } else if (tripIndex !== -1) {
+            user.tripWishlist.splice(tripIndex, 1);
+        }
+
+        await user.save();
+
+        const wishlist = await Wishlist.findById(wishlistId);
+        if (!wishlist) {
+            return res.status(404).json({ message: 'Wishlist not found' });
+        }
+
+        await WishlistItem.deleteMany({ _id: { $in: wishlist.items } });
+        await wishlist.remove();
+
+        res.status(200).json({
+            message: 'Wishlist and associated items deleted successfully',
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: 'Failed to delete wishlist',
+            error: error.message,
+        });
+    }
+};
+
 // Delete an item from a wishlist
 exports.deleteWishlistItem = async (req, res) => {
     const { wishlistId, itemId } = req.params;
-
     try {
         const wishlist = await Wishlist.findById(wishlistId);
         if (!wishlist) {

@@ -11,8 +11,11 @@ router.get('/general/:userId', wishlistController.getGeneralWishlists);
 // Fetch trip wishlists for a user (GET)
 router.get('/trip/:userId', wishlistController.getTripWishlists);
 
-// Add an item to a specific wishlist.
+// Add an item to a specific wishlist. (POST)
 router.post('/:wishlistId/items', wishlistController.addWishlistItem);
+
+// Update wishlist and wishlistItems by wishlist ID (PUT)
+router.put('/:userId/:wishlistId', wishlistController.updateWishlist);
 
 router.delete('/:userId', wishlistController.deleteWishlists);
 
