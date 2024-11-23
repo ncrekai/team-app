@@ -1,28 +1,19 @@
 const { Wishlist, WishlistItem } = require('../models/Wishlist');
 const User = require('../models/User');
+const Trip = require('../models/Trip');
 
 // Add a new Wishlist (general or trip) to the user
-exports.addWishlist = async (req, res) => {
+exports.createWishlist = async (req, res) => {
     const { userId } = req.params;
-    // Add type to specify wishlist type (general or trip)
-    const { name, items, type } = req.body;
+    const { name, items, type, tripId } = req.body;
 
     try {
-        // Step 1: Validation of items array
-        if (!Array.isArray(items)) {
-            return res.status(400).json({ message: "Items must be an array." });
+        // Validate tripId if type is 'trip'
+        if (type === 'trip' && !tripId) {
+            return res.status(400).json({ message: "Trip ID is required for a trip wishlist." });
         }
 
-        // Check if each item has a name
-        const invalidItems = items.filter(item => !item.name);
-        if (invalidItems.length > 0) {
-            return res.status(400).json({
-                message: "Each item must have a name",
-                invalidItems: invalidItems
-            });
-        }
-
-        // Step 2: Create WishlistItems
+        // Create WishlistItems
         const wishlistItems = [];
         for (const itemData of items) {
             const wishlistItem = new WishlistItem(itemData);
@@ -30,18 +21,24 @@ exports.addWishlist = async (req, res) => {
             wishlistItems.push(wishlistItem);
         }
 
-        // Step 3: Create Wishlist with the given name and items
+        // Create Wishlist with the given name and items
         const wishlist = new Wishlist({
             name,
+            type,
+            tripId: type === 'trip' ? tripId : null,
             items: wishlistItems.map(item => item._id),
         });
 
         await wishlist.save();
 
-        // Step 4: Add Wishlist to the correct field (general or trip) in the user's schema
+        // Add Wishlist to the correct field (general or trip) in the user's schema
         const user = await User.findById(userId);
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
+        }
+        // Ensure wishlist type is valid
+        if (type !== 'general' && type !== 'trip') {
+            return res.status(400).json({ message: 'Invalid wishlist type' });
         }
 
         if (type === 'general') {
@@ -52,7 +49,11 @@ exports.addWishlist = async (req, res) => {
             return res.status(400).json({ message: 'Invalid wishlist type' });
         }
 
-        await user.save();
+        // Update only the wishlist fields to avoid full validation
+        await User.findByIdAndUpdate(userId, {
+            generalWishlist: user.generalWishlist,
+            tripWishlist: user.tripWishlist
+        });
 
         res.status(201).json({
             message: 'Wishlist created successfully',
@@ -114,6 +115,16 @@ exports.getWishlists = async (req, res) => {
     }
 };
 
+exports.getGeneralWishlists = async (req, res) => {
+    const { userId } = req.params;
+    try {
+        const wishlists = await Wishlist.find({ userId, type: 'general' });
+        res.status(200).json(wishlists);
+    } catch (error) {
+        res.status(500).json({ error: 'Error fetching general wishlists' });
+    }
+};
+
 // Get a specific wishlist by ID
 exports.getWishlistById = async (req, res) => {
     const { wishlistId } = req.params;
@@ -169,9 +180,8 @@ exports.updateWishlist = async (req, res) => {
 };
 
 // Delete a wishlist
-exports.deleteWishlist = async (req, res) => {
+exports.deleteWishlists = async (req, res) => {
     const { wishlistId, userId } = req.params;
-
     try {
         const user = await User.findById(userId);
         if (!user) {
