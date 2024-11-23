@@ -1,6 +1,7 @@
 import {createContext, useEffect, useState} from 'react';
 import {login, logout} from './authService.js';
 import {jwtDecode} from "jwt-decode";
+import Axios from "axios";
 
 const decodeToken = (token) => {
     try {
@@ -11,6 +12,19 @@ const decodeToken = (token) => {
         return null;
     }
 };
+
+const fetchUserInfo = async (userId, token) => {
+    try {
+        const response = await Axios.get(`http://localhost:8080/users/${userId}`, {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching user profile", error);
+        throw error;
+    }
+};
+
 
 // create a Context for managing authentication state
 export const AuthContext = createContext();
@@ -23,21 +37,25 @@ export const AuthProvider = ({ children }) => {
 
     //save the token to the local storage
     useEffect(() => {
-        if(token) {
-            localStorage.setItem('token', token);
-        } else {
-            localStorage.removeItem('token');
-        }
-    }, [token])
-
-    // check if there's a saved token in localStorage
-    useEffect(() => {
         const storedToken = localStorage.getItem('token');
         if (storedToken) {
-            // Assuming the token is decoded to get user info (e.g., with jwt-decode)
-            const userInfo = decodeToken(storedToken); // replace with actual decoding function
-            setUser(userInfo);
-            setToken(storedToken)
+            // Decode token to get userId or user data
+            const userInfo = decodeToken(storedToken);
+            setToken(storedToken);
+
+            // Fetch the full user profile if the token contains only userId
+            if (userInfo && userInfo.userId) {
+                fetchUserInfo(userInfo.userId, storedToken)
+                    .then(userInfo => {
+                        setUser(userInfo);
+                    })
+                    .catch(error => {
+                        console.error("Error fetching user data after login", error);
+                    });
+            } else {
+                // If user data is already in the token
+                setUser(userInfo);
+            }
         }
     }, []);
 
