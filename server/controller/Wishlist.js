@@ -2,62 +2,55 @@ const { Wishlist, WishlistItem } = require('../models/Wishlist');
 const User = require('../models/User');
 const Trip = require('../models/Trip');
 
-// Add a new Wishlist (general or trip) to the user
+// Create new wishlist (POST)
 exports.createWishlist = async (req, res) => {
     const { userId } = req.params;
-    const { name, items, type, tripId } = req.body;
+    const { name, items = [], type, tripId } = req.body;
+
+    // Ensure wishlist type is valid
+    const validTypes = ['general', 'trip'];
+    if (!validTypes.includes(type)) {
+        return res.status(400).json({ message: 'Invalid wishlist type' });
+    }
+
+    // Validate tripId if type is 'trip'
+    if (type === 'trip' && !tripId) {
+        return res.status(400).json({ message: "Trip ID is required for a trip wishlist." });
+    }
 
     try {
-        // Validate tripId if type is 'trip'
-        if (type === 'trip' && !tripId) {
-            return res.status(400).json({ message: "Trip ID is required for a trip wishlist." });
-        }
-
         // Create WishlistItems
-        const wishlistItems = [];
-        for (const itemData of items) {
+        const wishlistItems = await Promise.all(items.map(async (itemData) => {
             const wishlistItem = new WishlistItem(itemData);
             await wishlistItem.save();
-            wishlistItems.push(wishlistItem);
-        }
+            return wishlistItem._id;
+        }));
 
-        // Create Wishlist with the given name and items
+        // Create Wishlist
         const wishlist = new Wishlist({
             name,
             type,
             tripId: type === 'trip' ? tripId : null,
-            items: wishlistItems.map(item => item._id),
+            items: wishlistItems,
         });
 
         await wishlist.save();
 
-        // Add Wishlist to the correct field (general or trip) in the user's schema
-        const user = await User.findById(userId);
+        // Update user's generalWishlist or tripWishlist
+        const updateField = type === 'general' ? 'generalWishlist' : 'tripWishlist';
+
+        // Directly update the user's wishlist field
+        const user = await User.findByIdAndUpdate(userId, {
+            $push: { [updateField]: wishlist }
+        }, { new: true });
+
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
-        // Ensure wishlist type is valid
-        if (type !== 'general' && type !== 'trip') {
-            return res.status(400).json({ message: 'Invalid wishlist type' });
-        }
-
-        if (type === 'general') {
-            user.generalWishlist.push(wishlist);
-        } else if (type === 'trip') {
-            user.tripWishlist.push(wishlist);
-        } else {
-            return res.status(400).json({ message: 'Invalid wishlist type' });
-        }
-
-        // Update only the wishlist fields to avoid full validation
-        await User.findByIdAndUpdate(userId, {
-            generalWishlist: user.generalWishlist,
-            tripWishlist: user.tripWishlist
-        });
 
         res.status(201).json({
             message: 'Wishlist created successfully',
-            wishlist: wishlist,
+            wishlist,
         });
 
     } catch (error) {
@@ -69,59 +62,49 @@ exports.createWishlist = async (req, res) => {
     }
 };
 
-// Get all wishlists (general or trip) for a user
-exports.getWishlists = async (req, res) => {
+// Get general wishlists
+exports.getGeneralWishlists = async (req, res) => {
     const { userId } = req.params;
-    // 'general' or 'trip'
-    const { type } = req.query;
-    console.log(req.query)
-    console.log(type)
-    try {
-        // Populate the correct wishlist based on type
-        const user = await User.findById(userId)
-            .populate({
-                path: 'generalWishlist',
-                populate: { path: 'items' }  // Populate items within generalWishlist
-            })
-            .populate({
-                path: 'tripWishlist',
-                populate: { path: 'items' }  // Populate items within tripWishlist
-            });
 
+    try {
+        const user = await User.findById(userId).populate('generalWishlist');
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        // Return the correct wishlist based on type
-        let wishlists = [];
-        if (type === 'general') {
-            wishlists = user.generalWishlist;
-        } else if (type === 'trip') {
-            wishlists = user.tripWishlist;
-        } else {
-            return res.status(400).json({ message: 'Invalid wishlist type' });
-        }
-
         res.status(200).json({
-            message: 'Wishlists fetched successfully',
-            wishlists: wishlists,
+            message: 'General wishlists fetched successfully',
+            wishlists: user.generalWishlist,
         });
     } catch (error) {
         console.error(error);
         res.status(500).json({
-            message: 'Failed to fetch wishlists',
+            message: 'Failed to fetch general wishlists',
             error: error.message,
         });
     }
 };
 
-exports.getGeneralWishlists = async (req, res) => {
+// Get trip wishlists
+exports.getTripWishlists = async (req, res) => {
     const { userId } = req.params;
+
     try {
-        const wishlists = await Wishlist.find({ userId, type: 'general' });
-        res.status(200).json(wishlists);
+        const user = await User.findById(userId).populate('tripWishlist');
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.status(200).json({
+            message: 'Trip wishlists fetched successfully',
+            wishlists: user.tripWishlist,
+        });
     } catch (error) {
-        res.status(500).json({ error: 'Error fetching general wishlists' });
+        console.error(error);
+        res.status(500).json({
+            message: 'Failed to fetch trip wishlists',
+            error: error.message,
+        });
     }
 };
 
@@ -248,6 +231,11 @@ exports.addWishlistItem = async (req, res) => {
         }
 
         wishlist.items.push(wishlistItem._id);
+        // validation if the type is 'trip'
+        if (wishlist.type === 'trip' && !wishlist.tripId) {
+            return res.status(400).json({ message: "Trip ID is missing for trip wishlist." });
+        }
+
         await wishlist.save();
 
         res.status(201).json({
