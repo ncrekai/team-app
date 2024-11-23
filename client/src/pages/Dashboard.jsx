@@ -5,7 +5,7 @@ import {useContext, useEffect, useState} from "react";
 import {AuthContext} from "../services/authContext.jsx";
 import {getProfile} from "../services/profileApi.jsx";
 import {getUserTrips} from '../services/tripsApi.jsx';
-import {getUserLists} from '../services/listsApi.jsx'
+import {getUserLists} from '../services/wishlistsApi.jsx'
 
 const Dashboard = () => {
    const { user, token } = useContext(AuthContext);
