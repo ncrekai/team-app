@@ -12,7 +12,7 @@ router.post('/', tripController.createTrip);
 router.get('/', tripController.getAllTrips);
 
 // Route to get trips for a specific user (GET)
-router.get('/user/:userId', tripController.getUserTrips);
+router.get('/:userId', tripController.getUserTrips);
 
 // Route to get a specific trip by ID (GET)
 router.get('/:id', tripController.read);
