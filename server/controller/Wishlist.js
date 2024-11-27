@@ -188,6 +188,19 @@ exports.updateWishlist = async (req, res) => {
             });
         }
 
+        // If the type is 'trip', we need to validate the tripId
+        if (type === 'trip') {
+            if (!tripId) {
+                return res.status(400).json({ message: "Trip ID is required for trip type." });
+            }
+
+            // Check if the tripId exists in the Trips array
+            const trip = await Trip.findById(tripId);
+            if (!trip) {
+                return res.status(404).json({ message: 'Trip not found' });
+            }
+        }
+
         // Update the wishlist itself (name, items, type)
         wishlist.name = name || wishlist.name;
         wishlist.items = items || wishlist.items;
