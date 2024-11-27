@@ -14,8 +14,15 @@ exports.createWishlist = async (req, res) => {
     }
 
     // Validate tripId if type is 'trip'
-    if (type === 'trip' && !tripId) {
-        return res.status(400).json({ message: "Trip ID is required for a trip wishlist." });
+    if (type === 'trip') {
+        if (!tripId) {
+            return res.status(400).json({message: "Trip ID is required for a trip wishlist."});
+        }
+        // Verify that the tripId exists in the Trips array
+        const tripExists = await Trip.findById(tripId);
+        if (!tripExists) {
+            return res.status(404).json({ message: 'Trip not found with the provided trip ID.' });
+        }
     }
 
     try {
