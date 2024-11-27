@@ -297,3 +297,37 @@ exports.deleteWishlistItem = async (req, res) => {
         });
     }
 };
+
+// Delete all wishlists for a user (both general and trip wishlists)
+exports.deleteAllWishlists = async (req, res) => {
+    const { userId } = req.params;
+    try {
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Clear the generalWishlist and tripWishlist arrays
+        user.generalWishlist = [];
+        user.tripWishlist = [];
+
+        // Save the user with empty wishlists
+        await user.save();
+
+        // Delete all wishlists associated with the user
+        await Wishlist.deleteMany({ _id: { $in: [...user.generalWishlist, ...user.tripWishlist] } });
+
+        // Delete associated wishlist items
+        await WishlistItem.deleteMany({ _id: { $in: [...user.generalWishlist, ...user.tripWishlist] } });
+
+        res.status(200).json({
+            message: 'All wishlists and associated items deleted successfully',
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: 'Failed to delete all wishlists',
+            error: error.message,
+        });
+    }
+};
