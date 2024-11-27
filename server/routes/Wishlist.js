@@ -17,6 +17,13 @@ router.post('/:wishlistId/items', wishlistController.addWishlistItem);
 // Update wishlist and wishlistItems by wishlist ID (PUT)
 router.put('/:userId/:wishlistId', wishlistController.updateWishlist);
 
-router.delete('/:userId', wishlistController.deleteWishlists);
+// Delete all wishlists for a user (Delete)
+router.delete('/all/:userId', wishlistController.deleteAllWishlists);
+
+// Delete a specific wishlist by ID (Delete)
+router.delete('/:userId/:wishlistId', wishlistController.deleteWishlist);
+
+// Delete an item from a specific wishlist (Delete)
+router.delete('/:wishlistId/items/:itemId', wishlistController.deleteWishlistItem);
 
 module.exports = router;
