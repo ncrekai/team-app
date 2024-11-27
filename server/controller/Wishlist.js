@@ -222,8 +222,8 @@ exports.updateWishlist = async (req, res) => {
     }
 };
 
-// Delete a wishlist
-exports.deleteWishlists = async (req, res) => {
+// Delete a specific wishlist
+exports.deleteWishlist = async (req, res) => {
     const { wishlistId, userId } = req.params;
     try {
         const user = await User.findById(userId);
@@ -245,13 +245,14 @@ exports.deleteWishlists = async (req, res) => {
             user.tripWishlist.splice(tripIndex, 1);
         }
 
+        // Save the user after removing the wishlist
         await user.save();
-
+        // Find and remove the wishlist
         const wishlist = await Wishlist.findById(wishlistId);
         if (!wishlist) {
             return res.status(404).json({ message: 'Wishlist not found' });
         }
-
+        // Remove associated items and the wishlist itself
         await WishlistItem.deleteMany({ _id: { $in: wishlist.items } });
         await wishlist.remove();
 
