@@ -161,8 +161,53 @@ exports.addWishlistItem = async (req, res) => {
 };
 
 // Update the wishlist && the wishlist item
+exports.updateWishlist = async (req, res) => {
+    const { userId, wishlistId } = req.params;
+    const { name, items, type, tripId } = req.body;
 
+    try {
+        // Fetch the wishlist to be updated
+        const wishlist = await Wishlist.findById(wishlistId);
+        if (!wishlist) {
+            return res.status(404).json({ message: 'Wishlist not found' });
+        }
 
+        // If type is changing, we need to update the user’s wishlist arrays
+        if (wishlist.type !== type) {
+            const updateField = type === 'general' ? 'generalWishlist' : 'tripWishlist';
+            const removeField = wishlist.type === 'general' ? 'generalWishlist' : 'tripWishlist';
+
+            // Remove the wishlist from the user's old array
+            await User.findByIdAndUpdate(userId, {
+                $pull: { [removeField]: wishlistId }
+            });
+
+            // Add the wishlist to the new array
+            await User.findByIdAndUpdate(userId, {
+                $push: { [updateField]: wishlistId }
+            });
+        }
+
+        // Update the wishlist itself (name, items, type)
+        wishlist.name = name || wishlist.name;
+        wishlist.items = items || wishlist.items;
+        wishlist.type = type || wishlist.type;
+        wishlist.tripId = type === 'trip' ? tripId : null;
+
+        await wishlist.save();
+
+        res.status(200).json({
+            message: 'Wishlist updated successfully',
+            wishlist,
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: 'Failed to update wishlist',
+            error: error.message,
+        });
+    }
+};
 
 // Delete a wishlist
 exports.deleteWishlists = async (req, res) => {
