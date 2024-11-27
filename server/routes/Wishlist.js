@@ -18,7 +18,7 @@ router.post('/:wishlistId/items', wishlistController.addWishlistItem);
 router.put('/:userId/:wishlistId', wishlistController.updateWishlist);
 
 // Delete all wishlists for a user (Delete)
-router.delete('/all/:userId', wishlistController.deleteAllWishlists);
+router.delete('/:userId', wishlistController.deleteAllWishlists);
 
 // Delete a specific wishlist by ID (Delete)
 router.delete('/:userId/:wishlistId', wishlistController.deleteWishlist);
