@@ -3,14 +3,14 @@ import { DisplayTrip, DisplayList, DisplayProfile } from '../components/DisplayB
 
 import {useContext, useEffect, useState} from "react";
 import {AuthContext} from "../services/authContext.jsx";
-import {getUserProfile} from "../services/profileApi.jsx";
-import {getUserTrips} from '../services/tripsApi.jsx';
-import {getUserLists} from '../services/wishlistsApi.jsx'
+// import {getUserProfile} from "../services/profileApi.jsx";
+// import {getUserTrips} from '../services/tripsApi.jsx';
+// import {getUserLists} from '../services/wishlistsApi.jsx'
 
 const Dashboard = () => {
-   const { user, token,  } = useContext(AuthContext);
-   const [userProfile, setUserProfile] = useState(null);
-   const [userTrips, setUserTrips] = useState([])
+   const { user, token, trips } = useContext(AuthContext);
+   // const [userProfile, setUserProfile] = useState(null);
+   // const [userTrips, setUserTrips] = useState([])
    const [loading, setLoading] = useState(true);
    // const [userLists, setUserLists] = useState(null)
 
@@ -31,24 +31,28 @@ const Dashboard = () => {
    //    fetchLists()
    // }, [profile])
 
-   useEffect(() => {
-      const fetchUserTrips = async () => {
-         try {
-            // Wait until the user and token are fetched
-            if(!user || !token) return;
+   // useEffect(() => {
+   //    const fetchUserTrips = async () => {
+   //       try {
+   //          // Wait until the user and token are fetched
+   //          if(!user || !token) return;
 
-            const userId = user._id;
-            const tripsData = await getUserTrips(userId, token);
-            setUserTrips(tripsData);
-         } catch {
-            console.log('error in fetchTrips');
-         } finally {
-            setLoading(false)
-         }
-      };
-      fetchUserTrips();
+   //          const userId = user._id;
+   //          const tripsData = await getUserTrips(userId, token);
+   //          setUserTrips(tripsData);
+   //       } catch {
+   //          console.log('error in fetchTrips');
+   //       } finally {
+   //          setLoading(false)
+   //       }
+   //    };
+   //    fetchUserTrips();
+   // }, [user, token])
+
+   useEffect(() => {
+      setLoading(false)
    }, [user, token])
-   
+
 
    if(!user || loading) {
       return <div>Loading user Info...</div>
@@ -69,8 +73,8 @@ const Dashboard = () => {
                 <div className='dashboard-container'>
                    <div className='page-title'>Welcome {user.name}</div>
                    <h3>My Trips</h3>
-                   { userTrips.length > 0 ? (
-                       userTrips.map((trip) => {
+                   { trips && trips.length ? (
+                       trips.map((trip) => {
                           return <DashboardTrip key={trip._id} userId={user._id} trip={trip}/>
                        }))
                        : <p>No Trips</p>
