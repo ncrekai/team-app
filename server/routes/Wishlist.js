@@ -15,7 +15,7 @@ router.get('/trip/:userId', wishlistController.getTripWishlists);
 router.post('/:wishlistId/items', wishlistController.addWishlistItem);
 
 // Update wishlist and wishlistItems by wishlist ID (PUT)
-router.put('/:userId/:wishlistId', wishlistController.updateWishlist);
+// router.put('/:userId/:wishlistId', wishlistController.updateWishlist);
 
 router.delete('/:userId', wishlistController.deleteWishlists);
 

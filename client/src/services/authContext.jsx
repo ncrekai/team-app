@@ -1,5 +1,6 @@
 import {createContext, useEffect, useState} from 'react';
 import {login, logout} from './authService.js';
+import { getUserProfile } from './profileApi.jsx';
 import {jwtDecode} from "jwt-decode";
 import Axios from "axios";
 
@@ -35,6 +36,8 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [token, setToken] = useState(localStorage.getItem('token') || null);
 
+    const [profile, setProfile] = useState(null)
+
     //save the token to the local storage
     useEffect(() => {
         const storedToken = localStorage.getItem('token');
@@ -59,13 +62,17 @@ export const AuthProvider = ({ children }) => {
         }
     }, []);
 
+    // Save profile data to context provider after user is set
+    useEffect(() => {
+        if (user) fetchUserProfile();
+    }, [user])
+
     const handleLogin = async (email, password) => {
         try {
             // Call the login function from authService to verify the user
             const data = await login(email, password);
             setUser(data.user);
             setToken(data.token);
-
             // Store token in localStorage
             localStorage.setItem('token', data.token);
             return data;
@@ -83,9 +90,27 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem('token');
     };
 
+    const fetchUserProfile = async () => {
+        try {
+            // Wait until the user and token are fetched
+            if(!user || !token) return;
+                getUserProfile(token)
+                .then(profileData => 
+                    setProfile({
+                        name: profileData.user.name,
+                        email: profileData.user.email,
+                        preferences: profileData.preferences,
+                        profilePicture: profileData.profilePicture 
+                    })
+                )
+        } catch {
+            console.log('error in authContext/fetchUserProfile');
+        }
+    }
+
     return (
         // make the authentication state and functions available to child components
-        <AuthContext.Provider value={{ user, token, handleLogin, handleLogout }}>
+        <AuthContext.Provider value={{ user, token, handleLogin, handleLogout, profile }}>
             {children}
         </AuthContext.Provider>
     );

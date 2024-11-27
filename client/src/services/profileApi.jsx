@@ -2,7 +2,7 @@ import Axios from 'axios'
 
 const API_URL = 'http://localhost:8080';
 
-export const getProfile = async (userId, token) => {
+export const getUserProfile = async (token) => {
     try {
         const response = await Axios.get(`${API_URL}/profiles/`, {
             headers: { Authorization: `Bearer ${token}` }

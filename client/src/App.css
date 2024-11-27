@@ -314,3 +314,13 @@ span.required {
 .menu-icon {
     cursor: pointer;
 }
+
+.MuiGrid2-container.grid-container {
+    width: 100%;
+}
+.profile-picture {
+    background-color: #ebebeb;
+    height: 200px;
+    width: 200px;
+    background-size: contain;
+}

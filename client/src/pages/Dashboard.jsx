@@ -3,13 +3,13 @@ import { DisplayTrip, DisplayList, DisplayProfile } from '../components/DisplayB
 
 import {useContext, useEffect, useState} from "react";
 import {AuthContext} from "../services/authContext.jsx";
-import {getProfile} from "../services/profileApi.jsx";
+import {getUserProfile} from "../services/profileApi.jsx";
 import {getUserTrips} from '../services/tripsApi.jsx';
 import {getUserLists} from '../services/wishlistsApi.jsx'
 
 const Dashboard = () => {
-   const { user, token } = useContext(AuthContext);
-   // const [profile, setProfile] = useState(null);
+   const { user, token,  } = useContext(AuthContext);
+   const [userProfile, setUserProfile] = useState(null);
    const [userTrips, setUserTrips] = useState([])
    const [loading, setLoading] = useState(true);
    // const [userLists, setUserLists] = useState(null)
@@ -48,6 +48,7 @@ const Dashboard = () => {
       };
       fetchUserTrips();
    }, [user, token])
+   
 
    if(!user || loading) {
       return <div>Loading user Info...</div>

@@ -19,17 +19,21 @@ const profileSchema = new mongoose.Schema(
             destinations: {
                 type: [String],  // Array of destination names or IDs
                 default: [],     // Default empty array
+                enum: ['cities', 'countryside', 'cold climate', 'warm climate', 'family-oriented', 'beaches'],
             },
             travelType: {
                 type: String,
+                enum: ['outdoors', 'roadtrip', 'all-inclusive', 'tours', 'other'],
                 default: '',
             },
             accommodation: {
                 type: String,
+                enum: ['camping', 'hotel', 'hostel', 'residential rental', 'resort', 'farm stays', 'other'],
                 default: '',
             },
             activities: {
                 type: [String],
+                enum: ['scenic hikes', 'food and drink', 'museums and galleries', 'historic sites', 'shopping', 'festivals', 'spas', 'guided tours', 'outdoor adventures'],
                 default: [],
             },
         },
