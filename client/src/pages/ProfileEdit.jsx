@@ -5,7 +5,7 @@ import axios from 'axios';
 import '../css/ProfileEdit.css';
 
 const ProfileEdit = () => {
-    const { user } = useContext(AuthContext);
+    const { user, profile } = useContext(AuthContext);
     const navigate = useNavigate();
 
     /*I mostly went off based on what I did in register.jsx
@@ -50,7 +50,7 @@ const ProfileEdit = () => {
                 delete dataToUpdate.password; 
             }
     
-            const response = await axios.put(`http://localhost:8080/users/${user._id}`, dataToUpdate);
+            const response = await axios.put(`http://localhost:8080/profile/${user._id}`, dataToUpdate);
     
             if (response.data) {
                 navigate(`/user/${user._id}`);
