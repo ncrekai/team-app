@@ -37,8 +37,7 @@ const Dashboard = () => {
             // Wait until the user and token are fetched
             if(!user || !token) return;
 
-            const userId = user._id;
-            const tripsData = await getUserTrips(userId, token);
+            const tripsData = await getUserTrips(token);
             setUserTrips(tripsData);
          } catch {
             console.log('error in fetchTrips');
