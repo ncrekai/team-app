@@ -1,5 +1,7 @@
 const User = require('../models/User');
 const Profile = require('../models/Profile');
+const bcrypt = require('bcrypt');
+//password hashing
 
 exports.createUser = async (req, res) => {
     try {
@@ -70,9 +72,20 @@ exports.updateUser = async (req, res) => {
         const { userId } = req.user;
         const updateData = req.body;
 
+        //Added password hashing directly to updateUser API
+        //Unsure if its possible to call it from schema
+        if (updateData.password) {
+            const hashedPassword = await bcrypt.hash(updateData.password, 10);
+            updateData.password = hashedPassword;
+        }
+
+        //Updates the user in mongoose
+        //I believe new: true returns the updated mongoose document
+        //Added runValidators due to hashedPassword portion of schema
+        //but not sure if redundant given above ^
         const updatedUser = await User.findByIdAndUpdate(userId, updateData, {
-            new: true, // Return the updated document
-            runValidators: true // Validate before saving
+            new: true, 
+            runValidators: true
         });
 
         if (!updatedUser) {

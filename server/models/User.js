@@ -6,6 +6,7 @@ const UserSchema = new mongoose.Schema({
     username: {
         type: String,
         trim: true,
+        required: 'Name is required',
     },
     email: {
         type: String,
@@ -29,7 +30,8 @@ const UserSchema = new mongoose.Schema({
     profile: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Profile',
-        default: null
+        unique: true, // Ensures a user can have only one profile
+        sparse: true,
     },
     //Trips actively planned (upcoming)
     trips: [{

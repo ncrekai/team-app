@@ -22,9 +22,9 @@ const Navbar = () => {
     };
 
     // Handle logout
-    const handleLogoutClick = () => {
+    const handleLogoutClick = (nav) => {
         // Call the logout function from AuthContext
-        handleLogout();
+        handleLogout(navigate);
         handleCloseMenu();
     };
 
