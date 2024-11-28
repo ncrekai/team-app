@@ -73,7 +73,8 @@ exports.getUserTrips = async (req, res) => {
 };
 
 // Fetch a trip by tripId
-exports.getTripById = async (req, res, next, tripId) => {
+exports.getTripById = async (req, res, next) => {
+    const { tripId } = req.params;
     try {
         const trip = await Trip.findById(tripId).populate('tripWishlist');
         if (!trip) {
