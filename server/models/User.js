@@ -29,7 +29,7 @@ const UserSchema = new mongoose.Schema({
     profile: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Profile',
-        unique: true,    // Ensures a user can have only one profile
+        default: null
     },
     //Trips actively planned (upcoming)
     trips: [{

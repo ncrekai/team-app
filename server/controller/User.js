@@ -3,9 +3,7 @@ const Profile = require('../models/Profile');
 
 exports.createUser = async (req, res) => {
     try {
-        const { username, email, password } = req.body;
-        
-        console.log('Request body:', req.body);
+        const { username, email, password, preferences } = req.body;
 
         // Check required fields
         if (!username || !password || !email) {
@@ -14,18 +12,21 @@ exports.createUser = async (req, res) => {
 
         // Create a new user
         const user = new User({ username, email, password });
-        await user.save();
 
-        // Create a new profile
-        const profile = new Profile({ user: user._id, preferences: req.body.preferences || {}});
-        await profile.save();
+        // Create and assign a profile to the user during registration
+        const profile = new Profile({ user: user._id, preferences: preferences || {} });
+        await profile.save(); // Save the profile
 
-        // Update the user with the profile ID
-        user.profile = profile._id;
-        await user.save();
+        user.profile = profile._id; // Assign the profile _id to the user
+        await user.save(); // Save the user with the assigned profile
 
-        res.json({ message: "User Created  successfully", user: user, profile: profile });
+        // Return the response
+        res.json({ message: "User and profile created successfully", user, profile });
     } catch (error) {
+        console.error("Error creating user:", error);
+        if (error.code === 11000) {
+            return res.status(400).json({ message: "Duplicate entry found" });
+        }
         res.status(400).json({ message: error.message });
     }
 };
