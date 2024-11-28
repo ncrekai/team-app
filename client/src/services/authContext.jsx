@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }) => {
 
     const fetchUserInfo = async (token) => {
         try {
-            const response = await Axios.get(`http://localhost:8080/users/user`, {
+            const response = await Axios.get(`http://localhost:8080/users/`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             return response.data;
@@ -51,10 +51,10 @@ export const AuthProvider = ({ children }) => {
             const profileData = await getUserProfile(token);
             console.log('Fetched profile data: ', profileData)
 
-            if (!profile || profile.name !== profileData.user.username) {
+            if (!profile || profile.name !== profileData.user.name) {
                 setProfile({
-                    _id: profileData.user.userId,
-                    name: profileData.user.username,
+                    _id: profileData.user._id,
+                    name: profileData.user.name,
                     email: profileData.user.email,
                     preferences: profileData.preferences,
                     profilePicture: profileData.profilePicture 

@@ -50,7 +50,7 @@ exports.getUsers = async (req, res) => {
 //get user by his/her id
 exports.getUserById = async (req, res) => {
     try {
-        const { userId } = req.user;
+        const  userId  = req.params.id;
         const user = await User.findById(userId)
             .populate('trips')
             .populate('tripWishlist')
