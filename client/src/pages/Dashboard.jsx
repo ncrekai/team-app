@@ -10,8 +10,25 @@ const Dashboard = () => {
    const [loading, setLoading] = useState(true);
 
    useEffect(() => {
+<<<<<<< HEAD
       setLoading(false)
       if (user) console.log(user)
+=======
+      const fetchUserTrips = async () => {
+         try {
+            // Wait until the user and token are fetched
+            if(!user || !token) return;
+
+            const tripsData = await getUserTrips(token);
+            setUserTrips(tripsData);
+         } catch {
+            console.log('error in fetchTrips');
+         } finally {
+            setLoading(false)
+         }
+      };
+      fetchUserTrips();
+>>>>>>> part-4
    }, [user, token])
 
 
