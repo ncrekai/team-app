@@ -2,6 +2,7 @@ import {createContext, useEffect, useState} from 'react';
 import {login, logout} from './authService.js';
 import { getUserProfile } from './profileApi.jsx';
 import { getUserTrips } from './tripsApi.jsx';
+import { getUserLists } from './wishlistsApi.jsx';
 import {jwtDecode} from "jwt-decode";
 import Axios from "axios";
 
@@ -69,6 +70,7 @@ export const AuthProvider = ({ children }) => {
         if (user) {
             fetchUserProfile()
             fetchUserTrips()
+            fetchUserLists()
         }
     }, [user])
 
@@ -126,6 +128,13 @@ export const AuthProvider = ({ children }) => {
         } catch {
            console.log('error in authContext/fetchTrips');
         }
+     }
+
+     const fetchUserLists = async () => {
+        if(!user || !token) return;
+        const userId = user._id;
+        getUserLists(userId, token)
+        .then(listData => console.log(listData))
      }
 
     return (
