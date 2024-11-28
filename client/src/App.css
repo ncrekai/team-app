@@ -22,7 +22,7 @@
 /* Style the hero section */
 .landingContainer {
     overflow: hidden;
-    display: flex;
+    display: flex !important;
     justify-content: space-between;
     align-items: center;
     height: 80vh;
