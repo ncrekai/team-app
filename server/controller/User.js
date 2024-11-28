@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const Profile = require('../models/Profile');
 const bcrypt = require('bcrypt');
+//password hashing
 
 exports.createUser = async (req, res) => {
     try {
