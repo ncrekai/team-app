@@ -1,4 +1,4 @@
-import { useOutletContext, Link, generatePath } from 'react-router-dom';
+import { Link, generatePath } from 'react-router-dom';
 import { DisplayTrip, DisplayList, DisplayProfile } from '../components/DisplayBoxes';
 
 import {useContext, useEffect, useState} from "react";
