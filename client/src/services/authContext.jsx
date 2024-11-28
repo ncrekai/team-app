@@ -113,7 +113,7 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    const handleLogout = () => {
+    const handleLogout = (navigate) => {
         logout();
         setUser(null);
         setToken(null);
@@ -121,6 +121,7 @@ export const AuthProvider = ({ children }) => {
         // Remove token from localStorage
         profileFetched.current = false;
         localStorage.removeItem('token');
+        navigate('/');
     };
 
     return (
