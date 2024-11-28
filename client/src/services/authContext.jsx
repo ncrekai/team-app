@@ -16,9 +16,9 @@ const decodeToken = (token) => {
     }
 };
 
-const fetchUserInfo = async (userId, token) => {
+const fetchUserInfo = async (token) => {
     try {
-        const response = await Axios.get(`http://localhost:8080/users/${userId}`, {
+        const response = await Axios.get(`http://localhost:8080/users/user`, {
             headers: { Authorization: `Bearer ${token}` }
         });
         return response.data;
@@ -48,10 +48,9 @@ export const AuthProvider = ({ children }) => {
             // Decode token to get userId or user data
             const userInfo = decodeToken(storedToken);
             setToken(storedToken);
-
             // Fetch the full user profile if the token contains only userId
-            if (userInfo && userInfo.userId) {
-                fetchUserInfo(userInfo.userId, storedToken)
+            if (userInfo) {
+                fetchUserInfo(storedToken)
                     .then(userInfo => {
                         setUser(userInfo);
                     })
@@ -71,7 +70,7 @@ export const AuthProvider = ({ children }) => {
             fetchUserProfile()
             fetchUserTrips()
             fetchUserLists()
-        }
+        } 
     }, [user])
 
     const handleLogin = async (email, password) => {
