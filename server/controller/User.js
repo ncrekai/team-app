@@ -69,7 +69,7 @@ exports.getUserById = async (req, res) => {
 // Update user by ID
 exports.updateUser = async (req, res) => {
     try {
-        const { userId } = req.user;
+        const userId = req.params.id;
         const updateData = req.body;
 
         //Added password hashing directly to updateUser API
@@ -96,6 +96,7 @@ exports.updateUser = async (req, res) => {
         res.status(400).json({ message: error.message });
     }
 };
+
 
 // Delete selected user
 exports.deleteUser = async (req, res) => {

@@ -20,7 +20,7 @@ exports.getProfile = async (req, res) => {
 // update the user's profile
 exports.updateProfile = async (req, res) => {
     try {
-        const updatedProfile = await Profile.findOneAndUpdate( { user: req.user.userId }, { $set: req.body });
+        const updatedProfile = await Profile.findOneAndUpdate( { user: req.user.userId }, { $set: req.body }, { new: true, runValidators: true });
         if (!updatedProfile) {
             return res.status(404).json({ message: 'Profile not found' });
         }
