@@ -4,9 +4,9 @@ const Trip = require('../models/Trip');
 
 // Create new wishlist (POST)
 exports.createWishlist = async (req, res) => {
-    const { userId } = req.params;
+    const { userId } = req.user;
     const { name, items = [], type, tripId } = req.body;
-
+s
     // Ensure wishlist type is valid
     const validTypes = ['general', 'trip'];
     if (!validTypes.includes(type)) {
@@ -16,10 +16,10 @@ exports.createWishlist = async (req, res) => {
     // Validate tripId if type is 'trip'
     if (type === 'trip') {
         if (!tripId) {
-            return res.status(400).json({message: "Trip ID is required for a trip wishlist."});
+            return res.status(400).json({ message: "Trip ID is required for a trip wishlist." });
         }
 
-        // Verify that the tripId exists in the Trips array
+        // Verify that the tripId exists in the Trips collection
         const tripExists = await Trip.findById(tripId);
         if (!tripExists) {
             return res.status(404).json({ message: 'Trip not found with the provided trip ID.' });
@@ -35,20 +35,32 @@ exports.createWishlist = async (req, res) => {
         }));
 
         // Create Wishlist
-        const wishlist = new Wishlist({name, type, tripId: type === 'trip' ? tripId : null, items: wishlistItems,});
+        const wishlist = new Wishlist({
+            name,
+            type,
+            tripId: type === 'trip' ? tripId : null, // Only add tripId if type is 'trip'
+            items: wishlistItems,
+        });
 
         await wishlist.save();
 
-        // Update user's generalWishlist or tripWishlist
+        // Update the user's generalWishlist or tripWishlist
         const updateField = type === 'general' ? 'generalWishlist' : 'tripWishlist';
 
-        // Directly update the user's wishlist field
+        // Update user's wishlist field with the created wishlist
         const user = await User.findByIdAndUpdate(userId, {
-            $push: { [updateField]: wishlist }
+            $push: { [updateField]: wishlist._id }
         }, { new: true });
 
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
+        }
+
+        // If it's a trip wishlist, also add it to the trip's tripWishlist field
+        if (type === 'trip') {
+            await Trip.findByIdAndUpdate(tripId, {
+                $push: { tripWishlist: wishlist._id }
+            });
         }
 
         res.status(201).json({
@@ -67,7 +79,7 @@ exports.createWishlist = async (req, res) => {
 
 // Get general wishlists
 exports.getGeneralWishlists = async (req, res) => {
-    const { userId } = req.params;
+    const { userId } = req.user;
 
     try {
         const user = await User.findById(userId).populate('generalWishlist');
@@ -90,7 +102,7 @@ exports.getGeneralWishlists = async (req, res) => {
 
 // Get trip wishlists
 exports.getTripWishlists = async (req, res) => {
-    const { userId } = req.params;
+    const { userId } = req.user;
 
     try {
         const user = await User.findById(userId).populate('tripWishlist');
@@ -113,7 +125,8 @@ exports.getTripWishlists = async (req, res) => {
 
 // Add an item to an existing wishlist
 exports.addWishlistItem = async (req, res) => {
-    const { userId, wishlistId } = req.params;
+    const { userId } = req.user;
+    const { wishlistId } = req.params;
     const { name, description, type } = req.body;
 
     try {
@@ -158,7 +171,8 @@ exports.addWishlistItem = async (req, res) => {
 
 // Update the wishlist && the wishlist item
 exports.updateWishlist = async (req, res) => {
-    const { userId, wishlistId } = req.params;
+    const { userId } = req.user;
+    const { wishlistId } = req.params;
     const { name, items, type, tripId } = req.body;
 
     try {
@@ -220,7 +234,8 @@ exports.updateWishlist = async (req, res) => {
 
 // Delete a specific wishlist
 exports.deleteWishlist = async (req, res) => {
-    const { wishlistId, userId } = req.params;
+    const { userId } = req.user;
+    const { wishlistId } = req.params;
     try {
         const user = await User.findById(userId);
         if (!user) {
@@ -243,18 +258,23 @@ exports.deleteWishlist = async (req, res) => {
 
         // Save the user after removing the wishlist
         await user.save();
-        // Find and remove the wishlist
+
+        // Find the wishlist by ID
         const wishlist = await Wishlist.findById(wishlistId);
         if (!wishlist) {
             return res.status(404).json({ message: 'Wishlist not found' });
         }
-        // Remove associated items and the wishlist itself
+
+        // Remove associated items
         await WishlistItem.deleteMany({ _id: { $in: wishlist.items } });
-        await wishlist.remove();
+
+        // Delete the wishlist using deleteOne
+        await Wishlist.deleteOne({ _id: wishlistId });
 
         res.status(200).json({
             message: 'Wishlist and associated items deleted successfully',
         });
+
     } catch (error) {
         console.error(error);
         res.status(500).json({
@@ -297,7 +317,7 @@ exports.deleteWishlistItem = async (req, res) => {
 
 // Delete all wishlists for a user (both general and trip wishlists)
 exports.deleteAllWishlists = async (req, res) => {
-    const { userId } = req.params;
+    const { userId } = req.user;
     try {
         const user = await User.findById(userId);
         if (!user) {

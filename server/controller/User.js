@@ -34,22 +34,12 @@ exports.createUser = async (req, res) => {
 //get all users
 exports.getUsers = async (req, res) => {
     try {
-        const users = await User.find();
-        //formatted GET list for better clarity
-        const formattedUsers = users.map(user => ({
-            _id: user._id,
-            username: user.username,
-            email:user.email,
-            password: user.password,
-            created: user.created,
-            updated: user.updated,
-            trips: user.trips,
-            tripWishlist: user.tripWishlist,
-            generalWishlist: user.generalWishlist,
-            savedTrips: user.savedTrips,
-            __v: user.__v
-        }));
-        res.status(200).json(formattedUsers);
+        const users = await User.find()
+            .populate('trips')
+            .populate('tripWishlist')
+            .populate('generalWishlist');
+
+        res.status(200).json(users);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -58,8 +48,11 @@ exports.getUsers = async (req, res) => {
 //get user by his/her id
 exports.getUserById = async (req, res) => {
     try {
-        const userId = req.params.id;
-        const user = await User.findById(userId);
+        const { userId } = req.user;
+        const user = await User.findById(userId)
+            .populate('trips')
+            .populate('tripWishlist')
+            .populate('generalWishlist');
 
         if (!user) {
             return res.status(404).json({ message: "User not found" });
@@ -74,7 +67,7 @@ exports.getUserById = async (req, res) => {
 // Update user by ID
 exports.updateUser = async (req, res) => {
     try {
-        const userId = req.params.id;
+        const { userId } = req.user;
         const updateData = req.body;
 
         const updatedUser = await User.findByIdAndUpdate(userId, updateData, {
@@ -91,10 +84,11 @@ exports.updateUser = async (req, res) => {
     }
 };
 
-// Delete all users
+// Delete selected user
 exports.deleteUser = async (req, res) => {
+    const { userId } = req.user;
     try {
-        const user = await User.findByIdAndDelete(req.params.id)
+        const user = await User.findByIdAndDelete(userId);
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }

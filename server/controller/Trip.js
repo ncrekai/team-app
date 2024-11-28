@@ -1,6 +1,6 @@
 const Trip = require('../models/Trip');
 const User = require('../models/User');
-const Wishlist  = require('../models/Wishlist');
+const { Wishlist, WishlistItem } = require('../models/Wishlist');
 
 // Create a new trip
 exports.createTrip = async (req, res) => {
@@ -51,7 +51,6 @@ exports.createTrip = async (req, res) => {
     }
 };
 
-
 // Fetch all trips
 exports.getAllTrips = async (req, res) => {
     try {
@@ -74,7 +73,8 @@ exports.getUserTrips = async (req, res) => {
 };
 
 // Fetch a trip by tripId
-exports.getTripById = async (req, res, next, tripId) => {
+exports.getTripById = async (req, res, next) => {
+    const { tripId } = req.params;
     try {
         const trip = await Trip.findById(tripId).populate('tripWishlist');
         if (!trip) {
@@ -140,34 +140,35 @@ exports.updateTrip = async (req, res) => {
 
 // Delete Specific trip
 exports.deleteTrip = async (req, res) => {
-    const { tripId } = req.params;
-    const { userId } = req.user; // Use the authenticated user's ID
-
     try {
-        // Find the trip
-        const trip = await Trip.findOne({ _id: tripId, createdBy: userId });
+        const { tripId } = req.params;
+
+        // Ensure the trip belongs to the authenticated user
+        const trip = await Trip.findOne({ _id: tripId, createdBy: req.user.userId }).populate('tripWishlist');
         if (!trip) {
-            return res.status(404).json({ message: 'Trip not found' });
+            return res.status(404).json({ message: "Trip not found or not authorized" });
         }
 
-        // Delete the trip
-        await trip.remove();
+        const wishlists = await Wishlist.find({ tripId: tripId });
+        if (trip.tripWishlist.length > 0) {
+            await WishlistItem.deleteMany({ _id: { $in: wishlists.flatMap(wishlist => wishlist.items) } });
 
-        // Manually delete the related wishlists for the trip
-        for (let i = 0; i < trip.tripWishlist.length; i++) {
-            const wishlistId = trip.tripWishlist[i];
-
-            console.log(wishlistId)
-            // Use remove to delete the wishlist by id
-            await Wishlist.findById(wishlistId).remove();
+            // Delete the wishlists themselves
+            await Wishlist.deleteMany({ tripId: tripId });
         }
 
-        return res.status(200).json({
-            message: 'Trip and related wishlists deleted successfully',
-        });
+        // Update the user's trips array to remove the deleted trip reference
+        const updatedUser = await User.findByIdAndUpdate(req.user.userId, {
+            $pull: { tripWishlist: tripId }
+        }, { new: true });
+
+        // Delete the trip itself
+        await Trip.findByIdAndDelete(tripId);
+
+        res.status(200).json({ message: "Trip and related trip wishlists deleted successfully" });
     } catch (error) {
-        console.error(error);
-        return res.status(500).json({ message: 'Error deleting trip and wishlists', error: error.message });
+        console.error('Error deleting trip:', error);
+        res.status(500).json({ message: error.message });
     }
 };
 
