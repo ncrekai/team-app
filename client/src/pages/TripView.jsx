@@ -1,51 +1,76 @@
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, generatePath } from 'react-router-dom';
 import { useState, useEffect, useContext } from 'react';
-import { DisplayList } from '../components/DisplayBoxes';
 import ReturnEdit from '../components/ReturnEdit';
-import { getTripsById } from '../services/tripsApi';
 import {AuthContext} from "../services/authContext.jsx";
 
 const TripView = () => {
-   const { user, token } = useContext(AuthContext);
-   const {id, userId} = useParams()
-
-   const [trip, setTrip] = useState([])
+   const { user } = useContext(AuthContext);
+   const {id} = useParams()
+   const [trip, setTrip] = useState()
+   const [lists, setLists] = useState([])
 
    useEffect(() => {
-      fetchTrip();
-   }, [user, token]);
-
-   const fetchTrip = async () => {
-      try {
-         const TripData = await getTripsById(id,userId,token);
-         setTrip(TripData);
-      } catch (error) {
-         console.log('error in fetchTrip');
+      if (user) {
+         const current = user.trips.filter(trip => trip._id == id)
+         current[0].startDate = current[0].startDate.slice(0,10)
+         current[0].endDate = current[0].endDate.slice(0,10)
+         setTrip(current[0])
       }
-   };
-   useEffect(() => console.log(trip),[trip])
+   }, [user])
 
-   return (
-      <div className='page-inner'>
-         <div className='page trips'>
-         {/* <div className='page-title'>Trip to Nowhere</div> */}
-            <div className='page-title'>{trip.name}</div>
-            <div className='body-container'>
-               <div className='trip-body'>
-                  <h2>{trip.destination}</h2>
-                  <h4>From: {trip.startDate}</h4>
-                  <h4>To: {trip.endDate}</h4>
-                  {/* <h4>From: {trip.startDate.slice(0,10)}</h4> */}
-                  {/* <h4>To: {trip.endDate.slice(0,10)}</h4> */}
+   useEffect(() => {
+      if (trip && trip.tripWishlist.length) {
+         const tripLists = []
+         trip.tripWishlist.forEach(id => {
+            user.tripWishlist.filter(el => {
+               if (el._id === id) tripLists.push(el)
+            })
+         })
+         setLists(tripLists)
+      }
+   }, [trip])
 
-                  {/* <div className='page-subtitle'>Trip Lists:</div>
-                  {lists.length ? lists.map((list, i) => <DisplayList key={`list-${i}`} list={list} />) : <p>None</p>} */}
+   useEffect(() => {
+      if (lists && lists.length) console.log(lists)
+   }, [lists])
+
+   if(!trip) {
+      return <div>Loading user Info...</div>
+   } else {
+      return (
+         <div className='page-inner'>
+            <div className='page trips'>
+               <div className='page-title'>{trip.name}</div>
+               <div className='body-container'>
+                  <div className='trip-body'>
+                     <h2>{trip.destination}</h2>
+                     <h4>From: {trip.startDate}</h4>
+                     <h4>To: {trip.endDate}</h4>
+                     {/* { lists.length ? } */}
+                     <div className='page-subtitle'>Trip Lists:</div>
+                     {lists.length ? lists.map((list, i) => <TripListDisplay key={`list-${i}`} id={user._id} list={list} />) : <p>None</p>}
+                  </div>
+                  <ReturnEdit />
                </div>
-               {/* <ReturnEdit /> */}
             </div>
          </div>
-      </div>
-   );
+      );
+   }
 };
+
+const TripListDisplay = ({ id, list }) => {
+
+     const path = generatePath('../user/:id/:entity/:entityId', {
+     id: id,
+     entity: 'wishlists',
+     entityId: list._id
+   })
+
+   return (
+      <div className='dashboard-display'>
+         <div><Link to={path}>{list.name}</Link></div>
+      </div>
+   )
+}
 
 export default TripView;

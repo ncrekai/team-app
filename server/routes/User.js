@@ -1,23 +1,24 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controller/User');
+const authMiddleware = require('../middlewares/authMiddleware');
 
-// get the list of all users (GET)
+// Get the list of all users (Admin-only, requires separate auth if needed)
 router.route('/').get(userController.getUsers);
 
-// get a specific user by ID (GET)
-router.route('/:id').get(userController.getUserById);
+// Get the selected user Info (GET)
+router.route('/user').get(authMiddleware, userController.getUserById);
 
-// create a new user (POST)
+// Create a new user (Register) (POST)
 router.route('/').post(userController.createUser);
 
-// update a specific user by ID (PUT)
-router.route('/:id').put(userController.updateUser);
+// Update the selected user Info (PUT)
+router.route('/user').put(authMiddleware, userController.updateUser);
 
-// delete a specific user by ID (DELETE)
-router.route('/:id').delete(userController.deleteUser);
+// Delete the selected user (DELETE)
+router.route('/user').delete(authMiddleware, userController.deleteUser);
 
-// delete all users (DELETE)
+// Delete all users
 router.route('/').delete(userController.deleteAllUsers);
 
 module.exports = router;

@@ -1,32 +1,30 @@
 const express = require('express');
 const router = express.Router();
 const tripController = require('../controller/Trip');
+const authMiddleware = require('../middlewares/authMiddleware');
 
-// Middleware to get the trip by ID and populate req.trip
-router.param('id', tripController.getTripById);
+// Create a new trip
+router.post('/', authMiddleware, tripController.createTrip);
 
-// Route to create a new trip (POST)
-router.post('/', tripController.createTrip);
+// Get all trips
+router.get('/', authMiddleware, tripController.getAllTrips);
 
-// Route to get all trips (GET)
-router.get('/', tripController.getAllTrips);
+// Get trips for the user
+router.get('/user', authMiddleware, tripController.getUserTrips);
 
-// Route to get trips for a specific user (GET)
-router.get('/user/:userId', tripController.getUserTrips);
+// Get a specific trip by tripId
+router.get('/:tripId', authMiddleware, tripController.getTripById);
 
-// Route to get a specific trip by ID (GET)
-router.get('/:id', tripController.read);
+// Update a specific trip
+router.put('/:tripId', authMiddleware, tripController.updateTrip);
 
-// Route to update a specific trip by ID (PUT)
-router.put('/:id', tripController.updateTrip);
+// Add a wishlist to a specific trip
+router.put('/:tripId/trip-wishlists', authMiddleware, tripController.addWishlistToTrip);
 
-// Add a wishlist to a specific trip (PUT)
-router.put('/:tripId/trip-wishlists', tripController.addWishlistToTrip);
+// Delete a specific trip
+router.delete('/:tripId', authMiddleware, tripController.deleteTrip);
 
-// Route to delete a specific trip by ID (DELETE)
-router.delete('/:id', tripController.deleteTrip);
-
-// Route to delete all trips (DELETE)
-router.delete('/', tripController.deleteAllTrips);
+// Delete all trips for the logged-in user
+router.delete('/', authMiddleware, tripController.deleteAllTrips);
 
 module.exports = router;

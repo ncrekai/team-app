@@ -39,7 +39,7 @@ const WishlistSchema = new mongoose.Schema({
     tripId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Trip',
-        default: null   // Null for general wishlist
+        default: null
     },
     items: [
         {

@@ -1,6 +1,8 @@
 import {createContext, useEffect, useState} from 'react';
 import {login, logout} from './authService.js';
 import { getUserProfile } from './profileApi.jsx';
+import { getUserTrips } from './tripsApi.jsx';
+import { getUserLists } from './wishlistsApi.jsx';
 import {jwtDecode} from "jwt-decode";
 import Axios from "axios";
 
@@ -14,9 +16,9 @@ const decodeToken = (token) => {
     }
 };
 
-const fetchUserInfo = async (userId, token) => {
+const fetchUserInfo = async (token) => {
     try {
-        const response = await Axios.get(`http://localhost:8080/users/${userId}`, {
+        const response = await Axios.get(`http://localhost:8080/users/user`, {
             headers: { Authorization: `Bearer ${token}` }
         });
         return response.data;
@@ -37,6 +39,8 @@ export const AuthProvider = ({ children }) => {
     const [token, setToken] = useState(localStorage.getItem('token') || null);
 
     const [profile, setProfile] = useState(null)
+    const [trips, setTrips] = useState(null)
+    const [lists, setLists] = useState(null)
 
     //save the token to the local storage
     useEffect(() => {
@@ -45,10 +49,9 @@ export const AuthProvider = ({ children }) => {
             // Decode token to get userId or user data
             const userInfo = decodeToken(storedToken);
             setToken(storedToken);
-
             // Fetch the full user profile if the token contains only userId
-            if (userInfo && userInfo.userId) {
-                fetchUserInfo(userInfo.userId, storedToken)
+            if (userInfo) {
+                fetchUserInfo(storedToken)
                     .then(userInfo => {
                         setUser(userInfo);
                     })
@@ -64,7 +67,11 @@ export const AuthProvider = ({ children }) => {
 
     // Save profile data to context provider after user is set
     useEffect(() => {
-        if (user) fetchUserProfile();
+        if (user) {
+            fetchUserProfile()
+            // fetchUserTrips()
+            // fetchUserLists()
+        } 
     }, [user])
 
     const handleLogin = async (email, password) => {
@@ -94,23 +101,44 @@ export const AuthProvider = ({ children }) => {
         try {
             // Wait until the user and token are fetched
             if(!user || !token) return;
-                getUserProfile(token)
-                .then(profileData => 
-                    setProfile({
-                        name: profileData.user.name,
-                        email: profileData.user.email,
-                        preferences: profileData.preferences,
-                        profilePicture: profileData.profilePicture 
-                    })
-                )
+            getUserProfile(token)
+            .then(profileData => 
+                setProfile({
+                    name: profileData.user.name,
+                    email: profileData.user.email,
+                    preferences: profileData.preferences,
+                    profilePicture: profileData.profilePicture 
+                })
+            )
         } catch {
             console.log('error in authContext/fetchUserProfile');
         }
     }
 
+    // const fetchUserTrips = async () => {
+    //     try {
+    //        // Wait until the user and token are fetched
+    //        if(!user || !token) return;
+    //         const userId = user._id;
+    //        getUserTrips(token)
+    //        .then(tripData => {
+    //         setTrips(tripData)
+    //        })
+    //     } catch {
+    //        console.log('error in authContext/fetchTrips');
+    //     }
+    //  }
+
+    //  const fetchUserLists = async () => {
+    //     if(!user || !token) return;
+    //     const userId = user._id;
+    //     getUserLists(userId, token)
+    //     .then(listData => console.log(listData))
+    //  }
+
     return (
         // make the authentication state and functions available to child components
-        <AuthContext.Provider value={{ user, token, handleLogin, handleLogout, profile }}>
+        <AuthContext.Provider value={{ user, token, handleLogin, handleLogout, profile, trips }}>
             {children}
         </AuthContext.Provider>
     );

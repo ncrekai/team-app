@@ -1,39 +1,25 @@
-import { useParams } from 'react-router-dom';
+import { useParams, generatePath, Link } from 'react-router-dom';
 import { useState, useEffect, useContext } from 'react';
-import { DisplayTrip } from '../components/DisplayBoxes';
+// import { DisplayTrip } from '../components/DisplayBoxes';
 import { AuthContext } from '../services/authContext';
 import {getUserTrips} from '../services/tripsApi.jsx'
 
 const TripAll = () => {
-   const { user, token } = useContext(AuthContext);
+   const { user, token, trips } = useContext(AuthContext);
    const [userTrips, setUserTrips] = useState(null)
    const id = useParams().userId;
 
-   useEffect(() => {
-      fetchTrips();
-   }, [user, token]);
+ 
 
-   const fetchTrips = async () => {
-      try {
-         const tripData = await getUserTrips(user.userId, token)
-         const trips = await tripData.filter(trip => trip.createdBy == user.userId)
-         setUserTrips(trips)
-      } catch {
-         console.log('error in fetchTrips');
-      }
-   }
-
-   // useEffect(() => {
-   //    if (userTrips) console.log(userTrips)
-   // }, [userTrips])
-
-   if (userTrips) {
+   if(!trips) {
+      return <div>Loading user Info...</div>
+   } else {
       return (
          <div className='page-inner'>
             <div className='page lists'>
-               <div className='page-title'>All My Trips</div>
+               <div className='page-title'>All Saved Trips</div>
                <div className='body-container'>
-                  {userTrips.map((trip, i) => <DisplayTrip key={`trip-${i}`} user={id} trip={trip} />)}
+                  {trips.map((trip, i) => <DisplayTrip key={`trip-${i}`} user={id} trip={trip} />)}
                </div>
             </div>
          </div>
@@ -42,3 +28,19 @@ const TripAll = () => {
 };
 
 export default TripAll;
+
+const DisplayTrip = ({ user, trip }) => {
+   // console.log(user)
+   // console.log(trip.name)
+   const path = generatePath('../user/:id/trips/:tripid', {
+     id: user,
+     tripid: trip._id
+   })
+   return (
+     <div className='dashboard-display'>
+       <div>Trip: <Link to={path}>{trip.name}</Link></div>
+       <div>From: {trip.startDate.slice(0,10)}</div>
+       <div>To: {trip.endDate.slice(0,10)}</div>
+     </div>
+   )
+ }
