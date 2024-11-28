@@ -40,6 +40,7 @@ export const AuthProvider = ({ children }) => {
 
     const [profile, setProfile] = useState(null)
     const [trips, setTrips] = useState(null)
+    const [lists, setLists] = useState(null)
 
     //save the token to the local storage
     useEffect(() => {
@@ -68,8 +69,8 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         if (user) {
             fetchUserProfile()
-            fetchUserTrips()
-            fetchUserLists()
+            // fetchUserTrips()
+            // fetchUserLists()
         } 
     }, [user])
 
@@ -114,27 +115,26 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
-    const fetchUserTrips = async () => {
-        try {
-           // Wait until the user and token are fetched
-           if(!user || !token) return;
-            const userId = user._id;
-           getUserTrips(userId, token)
-           .then(tripData => {
+    // const fetchUserTrips = async () => {
+    //     try {
+    //        // Wait until the user and token are fetched
+    //        if(!user || !token) return;
+    //         const userId = user._id;
+    //        getUserTrips(token)
+    //        .then(tripData => {
+    //         setTrips(tripData)
+    //        })
+    //     } catch {
+    //        console.log('error in authContext/fetchTrips');
+    //     }
+    //  }
 
-            setTrips(tripData)
-           })
-        } catch {
-           console.log('error in authContext/fetchTrips');
-        }
-     }
-
-     const fetchUserLists = async () => {
-        if(!user || !token) return;
-        const userId = user._id;
-        getUserLists(userId, token)
-        .then(listData => console.log(listData))
-     }
+    //  const fetchUserLists = async () => {
+    //     if(!user || !token) return;
+    //     const userId = user._id;
+    //     getUserLists(userId, token)
+    //     .then(listData => console.log(listData))
+    //  }
 
     return (
         // make the authentication state and functions available to child components
