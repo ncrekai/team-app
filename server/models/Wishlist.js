@@ -31,22 +31,25 @@ const WishlistSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    createdAt: {
-        type: Date,
-        default: Date.now,
+    type: {
+        type: String,
+        enum: ['general', 'trip'],
+        required: true,
     },
-    // Array of wishlist items for each specific wishlist.
+    tripId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Trip',
+        default: null   // Null for general wishlist
+    },
     items: [
         {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'WishlistItem'
         }
     ],
-    // to classify the wishlist as general/ trip
-    type: {
-        type: String,
-        enum: ['general', 'trip'],
-        required: true,
+    createdAt: {
+        type: Date,
+        default: Date.now,
     }
 });
 

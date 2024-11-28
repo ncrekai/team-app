@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom';
 import { useState, useEffect, useContext } from 'react';
 import { DisplayList } from '../components/DisplayBoxes';
 import { AuthContext } from '../services/authContext';
-import {getUserLists} from '../services/listsApi.jsx'
+import {getUserLists} from '../services/wishlistsApi.jsx'
 
 const ListAll = () => {
    const { user, token } = useContext(AuthContext);

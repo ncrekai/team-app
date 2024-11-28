@@ -4,48 +4,83 @@
 .app-container * {
     display: flex;
 }
-.nav-container {
-    width: 100%;
-    padding: 10px;
+
+/* Style the navbar */
+.navbar {
+    background-color: white !important;
+    box-shadow: none;
+    color: #333 !important;
 }
-.nav-inner {
-    flex: 1;
-    flex-flow: column nowrap
+.MuiButtonBase-root.planButton {
+    background-color: #F0707D;
+    max-width: 200px;
+    font-weight: bold;
+    color: white;
+    padding: 1rem;
+    margin-top: 20px;
 }
-.nav-upper, .nav-lower {
-    flex-flow: row nowrap;
-    flex: 0 0 40px;
+/* Style the hero section */
+.landingContainer {
+    overflow: hidden;
+    display: flex;
     justify-content: space-between;
     align-items: center;
+    height: 80vh;
+    padding: 0 40px;
+    flex-direction: row; /* Align text and image horizontally */
 }
-.nav-middle {
-    flex: 1;
-    flex-flow: row nowrap;
 
+/* Media query for screen widths 900px and below */
+@media (max-width: 900px) {
+    .heroContainer {
+        flex-direction: column; /* Change to column on screens smaller than 900px */
+        align-items: center; /* Center the items */
+        padding: 0 20px; /* Adjust padding on mobile */
+    }
 }
-.logo, .menu-icon {
-    height: 30px;
-    width: 30px;
-}
-.dropdown-container {
+.leftContent {
+    margin-top: 10rem;
+    margin-left: 12rem;
+    max-width: 600px;
     flex: 1;
-    background: #fff;
-    flex-flow: column nowrap;
-    align-items: center;
-    
+    flex-direction: column;
+    justify-content: center;
 }
-.list-container {
+.heading {
+    font-weight: bold;
+    margin-bottom: 16px !important;
+    text-shadow: 2px 2px 4px #8BC4A4;
+}
+
+.planButton {
+    background-color: #F0707D !important;
+    max-width: 150px;
+    padding: 12px 20px;
+    margin-top: 20px;
+    border: 1px solid #F0707D;
+}
+
+.planButton:hover {
+    background-color: #F0707D;
+}
+
+.rightContent {
     flex: 1;
-    flex-flow: row nowrap;
-    justify-content: space-evenly;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.heroImage {
+    width: 35rem;
+    height: auto;
 }
 
 p, h1, h2, h3, h4, ul, li, div, a {
     font-family: "Dosis", sans-serif;
     font-style: normal;
     font-optical-sizing: auto;
-   margin: 0;
-   padding: 0;
+    margin: 0;
+    padding: 0;
 }
 h4 {
     font-size: 18px;
@@ -58,7 +93,7 @@ a {
 }
 
 .page-container {
-    background: #efefef;
+    background: #fff;
     align-items: stretch;
     height: calc(100vh - 100px)
 }
@@ -198,7 +233,7 @@ span.required {
     font-size: 2.5rem;
     font-weight: bold;
     color: #250fb2;
-    
+
 }
 
 .app-tagline {
@@ -234,48 +269,58 @@ span.required {
 .title-container {
     display: flex;
     align-items: center;
-    
-  }
-  
-  .team-logo {
+
+}
+
+.team-logo {
     height: 100px; /* Set the desired height for the logo */
     width: auto; /* Maintains aspect ratio */
-  }
-  
-  .nav-upper {
+}
+
+.nav-upper {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 10px 0;
-  }
+}
 
 .nav-middle-dropdown {
-  position: absolute;
-  top: 70px; /* Adjust this value as needed */
-  right: 20px; /* Align it to the right side of the screen */
-  background-color: rgba(0, 0, 0, 0.8); /* Dark background for the dropdown */
-  border-radius: 8px;
-  width: 200px; /* Width of the dropdown */
-  z-index: 1000; /* Ensures it appears on top of other elements */
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Shadow for a floating effect */
-  opacity: 1;
-  visibility: visible;
-  transition: opacity 0.3s ease, visibility 0.3s ease; /* Smooth transition for opening/closing */
+    position: absolute;
+    top: 70px; /* Adjust this value as needed */
+    right: 20px; /* Align it to the right side of the screen */
+    background-color: rgba(0, 0, 0, 0.8); /* Dark background for the dropdown */
+    border-radius: 8px;
+    width: 200px; /* Width of the dropdown */
+    z-index: 1000; /* Ensures it appears on top of other elements */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Shadow for a floating effect */
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.3s ease, visibility 0.3s ease; /* Smooth transition for opening/closing */
 }
 
 .dropdown-link {
-  padding: 10px;
-  color: white;
-  text-decoration: none;
-  display: block;
-  font-size: 16px;
-  transition: background-color 0.3s;
+    padding: 10px;
+    color: white;
+    text-decoration: none;
+    display: block;
+    font-size: 16px;
+    transition: background-color 0.3s;
 }
 
 .dropdown-link:hover {
-  background-color: rgba(255, 255, 255, 0.2); /* Hover effect */
+    background-color: rgba(255, 255, 255, 0.2); /* Hover effect */
 }
 
 .menu-icon {
-  cursor: pointer;
+    cursor: pointer;
+}
+
+.MuiGrid2-container.grid-container {
+    width: 100%;
+}
+.profile-picture {
+    background-color: #ebebeb;
+    height: 200px;
+    width: 200px;
+    background-size: contain;
 }

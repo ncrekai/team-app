@@ -1,6 +1,8 @@
 import {createContext, useEffect, useState} from 'react';
 import {login, logout} from './authService.js';
+import { getUserProfile } from './profileApi.jsx';
 import {jwtDecode} from "jwt-decode";
+import Axios from "axios";
 
 const decodeToken = (token) => {
     try {
@@ -12,6 +14,19 @@ const decodeToken = (token) => {
     }
 };
 
+const fetchUserInfo = async (userId, token) => {
+    try {
+        const response = await Axios.get(`http://localhost:8080/users/${userId}`, {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching user profile", error);
+        throw error;
+    }
+};
+
+
 // create a Context for managing authentication state
 export const AuthContext = createContext();
 
@@ -21,25 +36,36 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [token, setToken] = useState(localStorage.getItem('token') || null);
 
-    //save the token to the local storage
-    useEffect(() => {
-        if(token) {
-            localStorage.setItem('token', token);
-        } else {
-            localStorage.removeItem('token');
-        }
-    }, [token])
+    const [profile, setProfile] = useState(null)
 
-    // check if there's a saved token in localStorage
+    //save the token to the local storage
     useEffect(() => {
         const storedToken = localStorage.getItem('token');
         if (storedToken) {
-            // Assuming the token is decoded to get user info (e.g., with jwt-decode)
-            const userInfo = decodeToken(storedToken); // replace with actual decoding function
-            setUser(userInfo);
-            setToken(storedToken)
+            // Decode token to get userId or user data
+            const userInfo = decodeToken(storedToken);
+            setToken(storedToken);
+
+            // Fetch the full user profile if the token contains only userId
+            if (userInfo && userInfo.userId) {
+                fetchUserInfo(userInfo.userId, storedToken)
+                    .then(userInfo => {
+                        setUser(userInfo);
+                    })
+                    .catch(error => {
+                        console.error("Error fetching user data after login", error);
+                    });
+            } else {
+                // If user data is already in the token
+                setUser(userInfo);
+            }
         }
     }, []);
+
+    // Save profile data to context provider after user is set
+    useEffect(() => {
+        if (user) fetchUserProfile();
+    }, [user])
 
     const handleLogin = async (email, password) => {
         try {
@@ -47,7 +73,6 @@ export const AuthProvider = ({ children }) => {
             const data = await login(email, password);
             setUser(data.user);
             setToken(data.token);
-
             // Store token in localStorage
             localStorage.setItem('token', data.token);
             return data;
@@ -65,9 +90,27 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem('token');
     };
 
+    const fetchUserProfile = async () => {
+        try {
+            // Wait until the user and token are fetched
+            if(!user || !token) return;
+                getUserProfile(token)
+                .then(profileData => 
+                    setProfile({
+                        name: profileData.user.name,
+                        email: profileData.user.email,
+                        preferences: profileData.preferences,
+                        profilePicture: profileData.profilePicture 
+                    })
+                )
+        } catch {
+            console.log('error in authContext/fetchUserProfile');
+        }
+    }
+
     return (
         // make the authentication state and functions available to child components
-        <AuthContext.Provider value={{ user, token, handleLogin, handleLogout }}>
+        <AuthContext.Provider value={{ user, token, handleLogin, handleLogout, profile }}>
             {children}
         </AuthContext.Provider>
     );

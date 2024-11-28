@@ -2,7 +2,7 @@ import { useParams, useOutletContext } from 'react-router-dom';
 import { useState, useEffect, useContext } from 'react';
 import {AuthContext} from "../services/authContext.jsx";
 import ReturnEdit from '../components/ReturnEdit';
-import { getListById } from '../services/listsApi.jsx'
+import { getListById } from '../services/wishlistsApi.jsx'
 /*
 import landmark from '../assets/003-landmark.png';
 import activity from '../assets/004-hiking.png';
