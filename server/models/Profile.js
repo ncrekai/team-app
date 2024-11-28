@@ -24,10 +24,12 @@ const profileSchema = new mongoose.Schema(
             travelType: {
                 type: String,
                 enum: ['outdoors', 'roadtrip', 'all-inclusive', 'tours', 'other'],
+                default: [],
             },
             accommodation: {
                 type: String,
                 enum: ['camping', 'hotel', 'hostel', 'residential rental', 'resort', 'farm stays', 'other'],
+                default: [],
             },
             activities: {
                 type: [String],
