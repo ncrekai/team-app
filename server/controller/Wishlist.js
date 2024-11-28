@@ -18,6 +18,7 @@ exports.createWishlist = async (req, res) => {
         if (!tripId) {
             return res.status(400).json({message: "Trip ID is required for a trip wishlist."});
         }
+
         // Verify that the tripId exists in the Trips array
         const tripExists = await Trip.findById(tripId);
         if (!tripExists) {
@@ -34,12 +35,7 @@ exports.createWishlist = async (req, res) => {
         }));
 
         // Create Wishlist
-        const wishlist = new Wishlist({
-            name,
-            type,
-            tripId: type === 'trip' ? tripId : null,
-            items: wishlistItems,
-        });
+        const wishlist = new Wishlist({name, type, tripId: type === 'trip' ? tripId : null, items: wishlistItems,});
 
         await wishlist.save();
 

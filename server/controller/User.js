@@ -44,6 +44,8 @@ exports.getUsers = async (req, res) => {
             created: user.created,
             updated: user.updated,
             trips: user.trips,
+            tripWishlist: user.tripWishlist,
+            generalWishlist: user.generalWishlist,
             savedTrips: user.savedTrips,
             __v: user.__v
         }));
