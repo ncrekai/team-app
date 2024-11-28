@@ -6,7 +6,7 @@ const Trip = require('../models/Trip');
 exports.createWishlist = async (req, res) => {
     const { userId } = req.user;
     const { name, items = [], type, tripId } = req.body;
-
+s
     // Ensure wishlist type is valid
     const validTypes = ['general', 'trip'];
     if (!validTypes.includes(type)) {
@@ -125,6 +125,7 @@ exports.getTripWishlists = async (req, res) => {
 
 // Add an item to an existing wishlist
 exports.addWishlistItem = async (req, res) => {
+    const { userId } = req.user;
     const { wishlistId } = req.params;
     const { name, description, type } = req.body;
 
