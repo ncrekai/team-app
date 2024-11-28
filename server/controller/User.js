@@ -34,22 +34,12 @@ exports.createUser = async (req, res) => {
 //get all users
 exports.getUsers = async (req, res) => {
     try {
-        const users = await User.find();
-        //formatted GET list for better clarity
-        const formattedUsers = users.map(user => ({
-            _id: user._id,
-            username: user.username,
-            email:user.email,
-            password: user.password,
-            created: user.created,
-            updated: user.updated,
-            trips: user.trips,
-            tripWishlist: user.tripWishlist,
-            generalWishlist: user.generalWishlist,
-            savedTrips: user.savedTrips,
-            __v: user.__v
-        }));
-        res.status(200).json(formattedUsers);
+        const users = await User.find()
+            .populate('trips')
+            .populate('tripWishlist')
+            .populate('generalWishlist');
+
+        res.status(200).json(users);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -59,7 +49,10 @@ exports.getUsers = async (req, res) => {
 exports.getUserById = async (req, res) => {
     try {
         const userId = req.params.id;
-        const user = await User.findById(userId);
+        const user = await User.findById(userId)
+            .populate('trips')
+            .populate('tripWishlist')
+            .populate('generalWishlist');
 
         if (!user) {
             return res.status(404).json({ message: "User not found" });
