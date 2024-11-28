@@ -4,7 +4,7 @@ const API_URL = 'http://localhost:8080';
 
 export const getUserTrips = async (userId, token) => {
     try {
-        const response = await Axios.get(`${API_URL}/trips/user/${userId}`, {
+        const response = await Axios.get(`${API_URL}/trips/user/`, {
             headers: { Authorization: `Bearer ${token}` }
         })
         return response.data;
