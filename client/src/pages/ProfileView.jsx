@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { AuthContext } from '../services/authContext';
 import { Typography, CircularProgress } from '@mui/material';
-import '../css/profile.css';
+import '../css/profileView.css';
 import blankProfile from '../assets/blankProfile.jpg'
 import ReturnEdit from '../components/ReturnEdit';
 
@@ -23,6 +23,10 @@ const Profile = () => {
       );
    }
 
+   //Fetching was easy, styling this was terrible
+   //Not sure if it's fetching the proper things
+   //But at least it's fetching lol
+   
    return (
       <div className="page-inner">
          <Typography variant="h4" className="page-title">My Profile</Typography>
