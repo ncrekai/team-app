@@ -4,7 +4,7 @@ const Trip = require('../models/Trip');
 
 // Create new wishlist (POST)
 exports.createWishlist = async (req, res) => {
-    const { userId } = req.params;
+    const { userId } = req.user;
     const { name, items = [], type, tripId } = req.body;
 
     // Ensure wishlist type is valid
@@ -77,10 +77,9 @@ exports.createWishlist = async (req, res) => {
     }
 };
 
-
 // Get general wishlists
 exports.getGeneralWishlists = async (req, res) => {
-    const { userId } = req.params;
+    const { userId } = req.user;
 
     try {
         const user = await User.findById(userId).populate('generalWishlist');
@@ -103,7 +102,7 @@ exports.getGeneralWishlists = async (req, res) => {
 
 // Get trip wishlists
 exports.getTripWishlists = async (req, res) => {
-    const { userId } = req.params;
+    const { userId } = req.user;
 
     try {
         const user = await User.findById(userId).populate('tripWishlist');
@@ -126,7 +125,7 @@ exports.getTripWishlists = async (req, res) => {
 
 // Add an item to an existing wishlist
 exports.addWishlistItem = async (req, res) => {
-    const { userId, wishlistId } = req.params;
+    const { wishlistId } = req.params;
     const { name, description, type } = req.body;
 
     try {
@@ -171,7 +170,8 @@ exports.addWishlistItem = async (req, res) => {
 
 // Update the wishlist && the wishlist item
 exports.updateWishlist = async (req, res) => {
-    const { userId, wishlistId } = req.params;
+    const { userId } = req.user;
+    const { wishlistId } = req.params;
     const { name, items, type, tripId } = req.body;
 
     try {
@@ -233,7 +233,8 @@ exports.updateWishlist = async (req, res) => {
 
 // Delete a specific wishlist
 exports.deleteWishlist = async (req, res) => {
-    const { wishlistId, userId } = req.params;
+    const { userId } = req.user;
+    const { wishlistId } = req.params;
     try {
         const user = await User.findById(userId);
         if (!user) {
@@ -315,7 +316,7 @@ exports.deleteWishlistItem = async (req, res) => {
 
 // Delete all wishlists for a user (both general and trip wishlists)
 exports.deleteAllWishlists = async (req, res) => {
-    const { userId } = req.params;
+    const { userId } = req.user;
     try {
         const user = await User.findById(userId);
         if (!user) {
