@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }) => {
 
     const fetchUserInfo = async (token) => {
         try {
-            const response = await Axios.get(`http://localhost:8080/users/`, {
+            const response = await Axios.get(`http://localhost:8080/users/user`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             return response.data;
