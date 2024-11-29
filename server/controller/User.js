@@ -51,8 +51,20 @@ exports.getUserById = async (req, res) => {
         const { userId } = req.user;
         const user = await User.findById(userId)
             .populate('trips')
-            .populate('tripWishlist')
-            .populate('generalWishlist');
+            .populate({
+                path: 'tripWishlist',
+                populate: {
+                    path: 'items',
+                    model: 'WishlistItem',
+                }
+            })
+            .populate({
+                path: 'generalWishlist',
+                populate: {
+                    path: 'items',
+                    model: 'WishlistItem',
+                }
+            })
 
         if (!user) {
             return res.status(404).json({ message: "User not found" });
