@@ -8,7 +8,6 @@ const profileSchema = new mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
             required: true,
-            unique: true,  // A user can only have one profile
         },
         tripWishlist: [{
             type: mongoose.Schema.Types.ObjectId,
