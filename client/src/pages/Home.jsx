@@ -11,7 +11,7 @@ const Home = () => {
              </Typography>
              <Typography variant="h1" className='heading'>Travel</Typography>
              <Typography variant="h6" className='subheading'>
-                planning your perfect getaway today and make your dream vacation a reality!
+                Plan your perfect getaway today and make your dream vacation a reality!
              </Typography>
              <Button className='planButton'>Plan Your Trip</Button>
           </Box>
