@@ -127,7 +127,7 @@ export const AuthProvider = ({ children }) => {
 
     return (
         // make the authentication state and functions available to child components
-        <AuthContext.Provider value={{ user, token, handleLogin, handleLogout, setProfile, profile }}>
+        <AuthContext.Provider value={{ user, token, handleLogin, handleLogout, profile }}>
             {children}
         </AuthContext.Provider>
     );

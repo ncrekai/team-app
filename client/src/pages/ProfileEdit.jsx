@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const ProfileEdit = () => {
-    const { profile, token, setProfile } = useContext(AuthContext);
+    const { profile, token } = useContext(AuthContext);
     const navigate = useNavigate();
 
     // Pre-fills form with current email if available
@@ -45,8 +45,7 @@ const ProfileEdit = () => {
             if (!dataToUpdate.password) {
                 delete dataToUpdate.password;
             }
-    
-            const response = await axios.put(`http://localhost:8080/profile`, dataToUpdate,
+            await axios.put(`http://localhost:8080/profile`, dataToUpdate,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -54,10 +53,6 @@ const ProfileEdit = () => {
                     },
                 }
             );
-
-            // Update the profile in context with the new profile data
-            setProfile(response.data.profile);
-
             toast.success('Profile updated successfully! Redirecting...');
             setTimeout(() => navigate(`/profile`), 500);
         } catch (err) {
