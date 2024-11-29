@@ -78,11 +78,11 @@ const router = createBrowserRouter([
         element: <TripAll/>
       },
       {
-        path: 'user/:id',
+        path: 'profile',
         element: <ProfileView/>
       },
       {
-        path: 'user/:id/edit',
+        path: 'profile/edit',
         element: <ProfileEdit/>
       }
     ]
