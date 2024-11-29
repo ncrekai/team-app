@@ -1,15 +1,17 @@
-import { useState } from 'react';
-import { useParams, useOutletContext, useNavigate } from 'react-router-dom';
-import { EditItemText, EditItemDate, EditItemSelect } from '../components/EditItem';
+import { useState, useContext } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import {AuthContext} from "../services/authContext.jsx";
+import { EditItemText, EditItemDate, EditChecklistSelect } from '../components/EditItem';
+import { getDayIn } from '../helpfulFunctions.js';
 
 const TripNew = () => {
+   const { user } = useContext(AuthContext);
+
    const navigate = useNavigate();
-   const id = useParams().id;
-   const lists = useOutletContext().lists;
+   const id = useParams().userId;
+   const dateToday = getDayIn(new Date())
 
-   const dateToday = new Date()
-
-   const [tripData, setTripData] = useState({ id: null, user: id, name: '', startDate: dateToday, endDate: '', lists: [] });
+   const [tripData, setTripData] = useState({ createdBy: id, name: '', destination: '', startDate:'', endDate: '', tripWishlist: [] });
 
    const handleInput = (name, value) => {
       setTripData({ ...tripData, [name]: value });
@@ -18,28 +20,31 @@ const TripNew = () => {
    const handleSubmit = async (e) => {
       e.preventDefault();
       console.log('...pretending to send to api...');
-      // const updatedData = { ...trip, ...newTripData };
       const jsonBody = JSON.stringify(tripData);
       console.log(jsonBody);
-      navigate('/dashboard');
+      // navigate('/dashboard');
    };
-   
-   return (
-      <div className='page-inner'>
-         <div className='page lists'>
-            <div className='page-title'>New Trip</div>
-            <form className='form-container' onSubmit={handleSubmit}>
-              <EditItemText name='name' val='' display='Place' handleInput={handleInput} />
-              <EditItemDate name='startDate' val={dateToday} display='Start Date' handleInput={handleInput} />
-              <EditItemDate name='endDate' val={dateToday} display='End Date' handleInput={handleInput} />
-              <EditItemSelect name='lists' val={lists} current={[]} display='Linked Lists' 
-                multiple={true} handleInput={handleInput} />
-               <div className='input-container'>
-                  <input className='button' type='submit' value='Submit' />
-               </div>
-            </form>
+   if(!user) {
+      return <div>Loading Page...</div>
+   } else {
+      return (
+         <div className='page-inner'>
+            <div className='page lists'>
+               <div className='page-title'>New Trip</div>
+               <form className='form-container' onSubmit={handleSubmit}>
+               <EditItemText name='name' val='' display='Name' handleInput={handleInput} />
+               <EditItemText name='destination' val='' display='Destination' handleInput={handleInput} />
+               <EditItemDate name='startDate' val={dateToday} display='Start Date' handleInput={handleInput} />
+               <EditItemDate name='endDate' val={dateToday} display='End Date' handleInput={handleInput} />
+               <EditChecklistSelect name='lists' lists={user.generalWishlist.concat(user.tripWishlist)} current={[]} display='Linked Lists' 
+                  multiple={true} handleInput={handleInput} />
+                  <div className='input-container'>
+                     <input className='button' type='submit' value='Submit' />
+                  </div>
+               </form>
+            </div>
          </div>
-      </div>
-   );
+      );
+   }
 };
 export default TripNew;

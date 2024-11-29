@@ -53,8 +53,8 @@ export const AuthProvider = ({ children }) => {
 
             if (!profile || profile.name !== profileData.user.username) {
                 setProfile({
-                    _id: profileData.user.userId,
-                    name: profileData.user.username,
+                    _id: profileData.user._id,
+                    name: profileData.user.name,
                     email: profileData.user.email,
                     preferences: profileData.preferences,
                     profilePicture: profileData.profilePicture 

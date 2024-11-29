@@ -16,22 +16,22 @@ const ListView = () => {
    const {id, userId} = useParams()
 
   const [list, setList] = useState(null)
-  console.log(id, userId)
+  // console.log(id, userId)
 
   useEffect(() => {
-    fetchList();
- }, [user, token]);
-
- const fetchList = async () => {
-    try {
-       const ListData = await getListById(id,userId,token);
-       setList(ListData.wishlist);
-    } catch {
-       console.log('error in fetchTrip');
+    console.log(user)
+    if (user) {
+      let allLists = [...user.generalWishlist, ...user.tripWishlist]
+      let current = allLists.filter(el => el._id == id)
+      setList(current[0])
     }
- };
+ }, [user]);
 
-  if (list) {
+  if (!list) {
+    return (
+         <div>Loading list Info...</div>
+    )
+  } else {
     return (
       <div className='page-inner'>
             <div className='page lists'>

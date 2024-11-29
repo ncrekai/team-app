@@ -126,8 +126,6 @@ export const EditChecklistSelect = (props) => {
 
    const [selectedArr, setSelectedArr] = useState(current);
 
-   // useEffect(() => setSelectedArr(current), [])
-
    // Add handleSelect to checks / default checks for Lists already connected to Trip
    useEffect(() => {
       let inputs = document.querySelectorAll('input[type=checkbox]');
@@ -137,32 +135,18 @@ export const EditChecklistSelect = (props) => {
       });
    }, []);
 
-   // useEffect(() => {
-   //    if (!isSame) handleInput(name, selectedArr);
-   // }, [selectedArr]);
-
-   // const isSame = Array.isArray(current)
-   //    ? current.length === selectedArr.length && current.every((el, i) => el == selectedArr[i]) : true;
-
-   // const handleRadioSelect = (e) => {
-   //    const { name, value } = e.target;
-   //    value == '' ? handleInput(name, null) : handleInput(name, parseInt(value));
-   // };
+   useEffect(() => {
+      handleInput('tripWishlist', selectedArr);
+   }, [selectedArr]);
 
    const handleSelect = (e) => {
-      const id = e.target.value;
-      let currentSelected = [...selectedArr]
-      if (currentSelected.includes(id)) currentSelected.splice(selectedArr.indexOf(id), 1);
-         // currentSelected.filter(el => el !== id)
-         // setSelectedArr(currentSelected)
-      else currentSelected = [...selectedArr, id]
-      //    currentSelected.push(id)
-      //    setSelectedArr(currentSelected)
-      // }
+      let inputs = document.querySelectorAll('input[type=checkbox]');
+      const currentSelected = []
+      inputs.forEach((el) => {
+         if (el.checked) currentSelected.push(el.value)
+      });
       setSelectedArr(currentSelected)
    };
-
-   useEffect(() => console.log(selectedArr), [selectedArr])
 
    const displayCheckBox = (arr) => {
       const names = arr.map((el, i) => {
