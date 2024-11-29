@@ -1,4 +1,6 @@
 const Profile = require('../models/Profile');
+const User = require('../models/User');
+const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
 
 // Find profile by user ID (from JWT token)
@@ -17,22 +19,54 @@ exports.getProfile = async (req, res) => {
     }
 };
 
-// update the user's profile
+// Update the profile (PUT)
 exports.updateProfile = async (req, res) => {
     try {
-        const updatedProfile = await Profile.findOneAndUpdate( { user: req.user.userId }, { $set: req.body }, { new: true, runValidators: true });
+        const { email, password } = req.body;
+
+        // Validate inputs
+        if (!email && !password) {
+            return res.status(400).json({ message: 'Email or password is required.' });
+        }
+
+        const updates = {};
+        if (email) updates.email = email;
+
+        // Hash the password if it is provided
+        if (password) {
+            const saltRounds = 10;
+            updates.password = await bcrypt.hash(password, saltRounds);
+        }
+
+        // Update the email and password in the User model
+        if (email || password) {
+            const updatedUser = await User.findByIdAndUpdate(req.user.userId, { $set: updates }, { new: true });
+            if (!updatedUser) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+        }
+
+        // Update other fields in the Profile model
+        const updatedProfile = await Profile.findOneAndUpdate(
+            { user: req.user.userId },
+            { $set: {} },
+            { new: true, runValidators: true }
+        );
+
         if (!updatedProfile) {
             return res.status(404).json({ message: 'Profile not found' });
         }
 
         return res.json({
-            message: "Profile updated successfully",
-            profile: updatedProfile
+            message: 'Profile updated successfully',
+            profile: updatedProfile,
         });
     } catch (err) {
-        return res.status(500).json({ message: err.message || "Error while updating profile" });
+        console.error('Error updating profile:', err.message);
+        return res.status(500).json({ message: 'An error occurred while updating the profile.' });
     }
 };
+
 
 
 // add a saved trip to the user's profile
