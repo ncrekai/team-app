@@ -1,17 +1,13 @@
 import { useParams, generatePath, Link } from 'react-router-dom';
-import { useState, useEffect, useContext } from 'react';
-// import { DisplayTrip } from '../components/DisplayBoxes';
+import { useContext } from 'react';
 import { AuthContext } from '../services/authContext';
-// import {getUserTrips} from '../services/tripsApi.jsx'
 
 const TripAll = () => {
    const { user } = useContext(AuthContext);
-   // const [userTrips, setUserTrips] = useState(null)
    const id = useParams().userId;
-   console.log(user)
 
    const path = generatePath('../user/:id/trips/new', {
-      id: user,
+      id: id,
     })
 
    if(!user) {
@@ -34,8 +30,6 @@ const TripAll = () => {
 export default TripAll;
 
 const DisplayTrip = ({ user, trip }) => {
-   // console.log(user)
-   // console.log(trip.name)
    const path = generatePath('../user/:id/trips/:tripid', {
      id: user,
      tripid: trip._id

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useOutletContext, useNavigate } from 'react-router-dom';
-import { EditItemText, EditItemSelect } from '../components/EditItem';
+import { EditItemText, EditRadioSelect } from '../components/EditItem';
 
 const ListNew = () => {
    const navigate = useNavigate();
@@ -30,7 +30,7 @@ const ListNew = () => {
             <div className='page-title'>New List</div>
             <form className='form-container' onSubmit={handleSubmit}>
               <EditItemText name='name' val='' display='List Name' handleInput={handleInput} />
-              <EditItemSelect name='trip' val={trips} current={null} display='Linked Trip' 
+              <EditRadioSelect name='trip' val={trips} current={null} display='Linked Trip' 
                 multiple={false} handleInput={handleInput} />
                 <p>(Editing / creating list locations is not built yet)</p>
                <div className='input-container'>

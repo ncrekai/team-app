@@ -1,42 +1,58 @@
-import { useParams, useOutletContext, useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import { EditItemText, EditItemSelect } from '../components/EditItem';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useState, useEffect, useContext } from 'react';
+import {AuthContext} from "../services/authContext.jsx";
+import { EditItemText, EditRadioSelect } from '../components/EditItem';
+import axios from 'axios';
 
 const ListEdit = () => {
-   const navigate = useNavigate();
-   const id = useParams().id;
-   const lists = useOutletContext().lists
-   const listIndex = lists.findIndex((arr) => arr.id == id);
-   const list = lists[listIndex];
+   const { user, token } = useContext(AuthContext);
+   const { id } = useParams()
 
-   const trips = useOutletContext().trips;
+  const [list, setList] = useState(null)
+
+  useEffect(() => {
+    if (user) {
+      let allLists = [...user.generalWishlist, ...user.tripWishlist]
+      let current = allLists.filter(el => el._id == id)
+      setList(current[0])
+    }
+   }, [user]);
+
+   const navigate = useNavigate();
 
    const [newListData, setNewListData] = useState({});
 
    useEffect(() => console.log(newListData), [newListData]);
 
    const handleInput = (name, value) => {
-      setNewListData({ ...newListData, [name]: value });
+      setNewListData(curr => ({ ...curr, [name]: value }));
    };
 
    const handleSubmit = async (e) => {
-      e.preventDefault();
-      console.log('...pretending to send to api...');
+      e.preventDefault(); // Prevent page reload
       const updatedData = { ...list, ...newListData };
-      const jsonBody = JSON.stringify(updatedData);
-      console.log(jsonBody);
-      navigate('/dashboard');
+      const response = await axios.put(`http://localhost:8080/wishlists/${id}`, updatedData, {
+         params: {wishlistId: id}, 
+         headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+        },})
+        navigate('/dashboard')
+      return response.data;
    };
 
+  if (!list) {
+    return (
+         <div>Loading list Info...</div>
+    )
+  } else {
    return (
       <div className='page-inner'>
          <div className='page lists'>
             <div className='page-title'>Edit List</div>
             <form className='form-container' onSubmit={handleSubmit}>
               <EditItemText name='name' val={list.name} display='List Name' handleInput={handleInput} />
-              <EditItemSelect name='trip' val={trips} current={list.trip} display='Linked Trips' 
-                multiple={false} handleInput={handleInput} />
-                <p>(Editing / creating list locations is not built yet)</p>
+              <EditRadioSelect name='trip' id={id} type={list.type} trips={user.trips} display='Linked Trips' handleInput={handleInput} />
                <div className='input-container'>
                   <input className='button' type='submit' value='Submit' />
                </div>
@@ -44,6 +60,7 @@ const ListEdit = () => {
          </div>
       </div>
    );
+}
 };
 
 export default ListEdit;

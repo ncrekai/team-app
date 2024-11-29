@@ -1,8 +1,7 @@
-import { useParams, useOutletContext } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useState, useEffect, useContext } from 'react';
 import {AuthContext} from "../services/authContext.jsx";
 import ReturnEdit from '../components/ReturnEdit';
-import { getListById } from '../services/wishlistsApi.jsx'
 /*
 import landmark from '../assets/003-landmark.png';
 import activity from '../assets/004-hiking.png';
@@ -12,14 +11,12 @@ import other from '../assets/005-map.png';
 */
 const ListView = () => {
 
-  const { user, token } = useContext(AuthContext);
-   const {id, userId} = useParams()
+  const { user } = useContext(AuthContext);
+  const {id, userId} = useParams()
 
   const [list, setList] = useState(null)
-  // console.log(id, userId)
 
   useEffect(() => {
-    console.log(user)
     if (user) {
       let allLists = [...user.generalWishlist, ...user.tripWishlist]
       let current = allLists.filter(el => el._id == id)
@@ -40,7 +37,7 @@ const ListView = () => {
               <div className='location-list'>
                 {list.items.map((item,i) => <ListItem key={`list-item-${i}`} item={item}/> )}
                 </div>
-                {/* <ReturnEdit /> */}
+                <ReturnEdit />
             </div>
             </div>
         </div>

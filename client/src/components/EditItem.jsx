@@ -37,96 +37,11 @@ export const EditItemText = (props) => {
    );
 };
 
-export const EditItemSelect = (props) => {
-   const { name, lists, current, display, multiple, handleInput } = props;
-
-   const [selectedArr, setSelectedArr] = useState(Array.isArray(current) ? current : null);
-
-   useEffect(() => {
-      if (!isSame) handleInput(name, selectedArr);
-   }, [selectedArr]);
-
-   const isSame = Array.isArray(current)
-      ? current.length === selectedArr.length && current.every((el, i) => el == selectedArr[i]) : true;
-
-   const handleRadioSelect = (e) => {
-      const { name, value } = e.target;
-      value == '' ? handleInput(name, null) : handleInput(name, parseInt(value));
-   };
-
-   const handleCheckSelect = (e) => {
-      const id = parseInt(e.target.value);
-      if (selectedArr.includes(id)) setSelectedArr(curr => curr.filter((el) => el !== id));
-      else setSelectedArr(curr => [...curr, id]);
-   };
-
-   const displayCheckBox = (arr) => {
-      const names = arr.map((el, i) => {
-         return (
-            <div key={`check-${i}`}>
-               <input type='checkbox' id={`check-${i}`} value={el.id} defaultChecked={false} />
-               <label htmlFor={`check-${i}`}>{el.name}</label>
-            </div>
-         );
-      });
-      return <div className='checkbox-display'>{names}</div>;
-   };
-
-   const displayRadio = (arr) => {
-      let names = arr.map((el, i) => {
-         return (
-            <div key={`radio-${i}`}>
-               <input type='radio' name={name} value={el.id} id={`radio-${i}`} defaultChecked />
-               <label htmlFor={`radio-${i}`}>{el.name}</label>
-            </div>
-         );
-      });
-      return (
-         <div className='radio-display'>
-            <div>
-               <input type='radio' name={name} value={undefined} id='radio-none' defaultChecked />
-               <label htmlFor='radio-none'>No related trip</label>
-            </div>
-            {names}
-         </div>
-      );
-   };
-
-   useEffect(() => {
-      if (multiple) {
-         let inputs = document.querySelectorAll('input[type=checkbox]');
-         inputs.forEach((el) => {
-            el.addEventListener('click', handleCheckSelect);
-            if (current.some((e) => e == el.value)) el.checked = true;
-         });
-      } else {
-         let inputs = document.querySelectorAll('input[type=radio]');
-         inputs.forEach((el, i) => {
-            el.addEventListener('click', handleRadioSelect);
-            if (i === 0) {
-               if (current == null) el.checked = true;
-            } else {
-               if (current == el.value) el.checked = true;
-            }
-         });
-      }
-   }, []);
-
-   return (
-      <div className='input-container'>
-         <div className='input-label'>{display}:</div>
-         {multiple ? displayCheckBox(lists) : displayRadio(lists)}
-         {multiple && <span className='required'>Optional. Can select multiple</span>}
-      </div>
-   );
-};
-
 export const EditChecklistSelect = (props) => {
-   const { name, lists, current, display, multiple, handleInput } = props;
-
+   const { lists, current, display, handleInput } = props;
    const [selectedArr, setSelectedArr] = useState(current);
 
-   // Add handleSelect to checks / default checks for Lists already connected to Trip
+   // Add handleSelect to checkboxes / default checked for Lists already connected to Trip
    useEffect(() => {
       let inputs = document.querySelectorAll('input[type=checkbox]');
       inputs.forEach((el) => {
@@ -135,10 +50,12 @@ export const EditChecklistSelect = (props) => {
       });
    }, []);
 
+   // Call handleInput when selectedArr updates - calls setUpdatedTrip in TripEdit
    useEffect(() => {
       handleInput('tripWishlist', selectedArr);
    }, [selectedArr]);
-
+   
+   // Whenever a checkbox is selected, iterate through input and updates selectedArr
    const handleSelect = (e) => {
       let inputs = document.querySelectorAll('input[type=checkbox]');
       const currentSelected = []
@@ -148,23 +65,87 @@ export const EditChecklistSelect = (props) => {
       setSelectedArr(currentSelected)
    };
 
-   const displayCheckBox = (arr) => {
-      const names = arr.map((el, i) => {
-         return (
-            <div key={`check-${i}`}>
-               <input type='checkbox' id={`check-${i}`} value={el._id} defaultChecked={false} />
-               <label htmlFor={`check-${i}`}>{el.name}</label>
-            </div>
-         );
-      });
-      return <div className='checkbox-display'>{names}</div>;
+   return (
+      <div className='input-container'>
+         <div className='input-label'>{display}:</div>
+         <div className='checkbox-display'>
+            { lists.map((el, i) => {
+               return (
+                  <div key={`check-${i}`}>
+                     <input type='checkbox' id={`check-${i}`} value={el._id} defaultChecked={false} />
+                     <label htmlFor={`check-${i}`}>{el.name}</label>
+                  </div>
+               )}) }
+         </div>
+         <span className='required'>Optional. Can select multiple</span>
+      </div>
+   );
+};
+
+
+export const EditRadioSelect = (props) => {
+   const { name, id, type, trips, display, handleInput } = props;
+
+   const [currentSelect, setCurrentSelect] = useState(null)
+
+   useEffect(() => {
+      if (type === 'trip') {
+         let curr
+         trips.forEach(trip => { 
+            if (trip.tripWishlist.includes(id)) curr = trip._id
+         })
+         setCurrentSelect(curr)
+      }
+   },[])
+
+   useEffect(() => {
+      let inputs = document.querySelectorAll('input[type=radio]');
+         inputs.forEach((el, i) => {
+            el.addEventListener('click', handleRadioSelect);
+         });
+   }, []);
+
+      useEffect(() => {
+      let inputs = document.querySelectorAll('input[type=radio]');
+         inputs.forEach((el, i) => {
+            if (i === 0) {
+               if (currentSelect == null) el.checked = true;
+            } else {
+               if (currentSelect == el.value) el.checked = true;
+            }
+         });
+   }, [currentSelect]);
+
+   const handleRadioSelect = (e) => {
+      e.target.value == '' ? handleInput('tripId', null) : handleInput('tripId', e.target.value);
    };
+
+   { trips.map((el, i) => {
+      return (
+         <div key={`radio-${i}`}>
+            <input type='radio' name={name} value={el._id} id={`radio-${i}`} defaultChecked />
+            <label htmlFor={`radio-${i}`}>{el.name}</label>
+         </div>
+      );
+   })}
 
    return (
       <div className='input-container'>
          <div className='input-label'>{display}:</div>
-         { displayCheckBox(lists) }
-         <span className='required'>Optional. Can select multiple</span>
+         <div className='radio-display'>
+            <div>
+               <input type='radio' name={name} value={undefined} id='radio-none' defaultChecked />
+               <label htmlFor='radio-none'>No related trip</label>
+            </div>
+            { trips.map((el, i) => {
+               return (
+                  <div key={`radio-${i}`}>
+                     <input type='radio' name={name} value={el._id} id={`radio-${i}`} defaultChecked />
+                     <label htmlFor={`radio-${i}`}>{el.name}</label>
+                  </div>
+               );
+            })}
+         </div>
       </div>
    );
 };
