@@ -1,7 +1,5 @@
 const User = require('../models/User');
 const Profile = require('../models/Profile');
-const bcrypt = require('bcrypt');
-//password hashing
 
 exports.createUser = async (req, res) => {
     try {
@@ -50,7 +48,7 @@ exports.getUsers = async (req, res) => {
 //get user by his/her id
 exports.getUserById = async (req, res) => {
     try {
-        const  userId  = req.params.id;
+        const { userId } = req.user;
         const user = await User.findById(userId)
             .populate('trips')
             .populate('tripWishlist')
@@ -69,23 +67,12 @@ exports.getUserById = async (req, res) => {
 // Update user by ID
 exports.updateUser = async (req, res) => {
     try {
-        const userId = req.params.id;
+        const { userId } = req.user;
         const updateData = req.body;
 
-        //Added password hashing directly to updateUser API
-        //Unsure if its possible to call it from schema
-        if (updateData.password) {
-            const hashedPassword = await bcrypt.hash(updateData.password, 10);
-            updateData.password = hashedPassword;
-        }
-
-        //Updates the user in mongoose
-        //I believe new: true returns the updated mongoose document
-        //Added runValidators due to hashedPassword portion of schema
-        //but not sure if redundant given above ^
         const updatedUser = await User.findByIdAndUpdate(userId, updateData, {
-            new: true, 
-            runValidators: true
+            new: true, // Return the updated document
+            runValidators: true // Validate before saving
         });
 
         if (!updatedUser) {
@@ -96,7 +83,6 @@ exports.updateUser = async (req, res) => {
         res.status(400).json({ message: error.message });
     }
 };
-
 
 // Delete selected user
 exports.deleteUser = async (req, res) => {
