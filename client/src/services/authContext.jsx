@@ -51,10 +51,10 @@ export const AuthProvider = ({ children }) => {
             const profileData = await getUserProfile(token);
             console.log('Fetched profile data: ', profileData)
 
-            if (!profile || profile.name !== profileData.user.name) {
+            if (!profile || profile.name !== profileData.user.username) {
                 setProfile({
                     _id: profileData.user._id,
-                    name: profileData.user.name,
+                    name: profileData.user.username,
                     email: profileData.user.email,
                     preferences: profileData.preferences,
                     profilePicture: profileData.profilePicture 
@@ -127,7 +127,7 @@ export const AuthProvider = ({ children }) => {
 
     return (
         // make the authentication state and functions available to child components
-        <AuthContext.Provider value={{ user, token, handleLogin, handleLogout, profile }}>
+        <AuthContext.Provider value={{ user, token, handleLogin, handleLogout, setProfile, profile }}>
             {children}
         </AuthContext.Provider>
     );
