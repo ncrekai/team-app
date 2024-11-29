@@ -4,7 +4,7 @@ const API_URL = 'http://localhost:8080';
 
 export const getUserProfile = async (token) => {
     try {
-        const response = await Axios.get(`${API_URL}/profiles/`, {
+        const response = await Axios.get(`${API_URL}/profile/`, {
             headers: { Authorization: `Bearer ${token}` }
         })
         return response.data;
@@ -16,7 +16,7 @@ export const getUserProfile = async (token) => {
 
 export const updateProfile = async (userId, profileDate, token) => {
     try {
-        const response = await Axios.put(`${API_URL}/profiles/${userId}`, profileDate, {
+        const response = await Axios.put(`${API_URL}/profile/`, profileDate, {
             headers: { Authorization: `Bearer ${token}` }
         })
         return response.data;
