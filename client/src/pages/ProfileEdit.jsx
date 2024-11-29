@@ -3,9 +3,11 @@ import { AuthContext } from '../services/authContext';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../css/ProfileEdit.css';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ProfileEdit = () => {
-    const { user, profile, token } = useContext(AuthContext);
+    const { profile, token, setProfile } = useContext(AuthContext);
     const navigate = useNavigate();
 
     // Pre-fills form with current email if available
@@ -30,26 +32,21 @@ const ProfileEdit = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-    
+
         if (!profile || !profile._id) {
             console.error('Profile or profile ID is missing.');
             return;
         }
     
         try {
-            const dataToUpdate = { ...formData, id: profile._id }; // Add `id` to request body
+            const dataToUpdate = { ...formData };
     
             // Only include the password if it's not empty
             if (!dataToUpdate.password) {
                 delete dataToUpdate.password;
             }
     
-            console.log('Updating profile with ID:', profile._id);
-            console.log('Token:', token);
-    
-            const response = await axios.put(
-                `http://localhost:8080/users/user`, 
-                dataToUpdate,
+            const response = await axios.put(`http://localhost:8080/profile`, dataToUpdate,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -57,13 +54,20 @@ const ProfileEdit = () => {
                     },
                 }
             );
-    
-            console.log('Profile updated:', response.data);
-    
-            // Redirect to the user's profile page
-            navigate(`/user/${profile._id}`);
+
+            // Update the profile in context with the new profile data
+            setProfile(response.data.profile);
+
+            toast.success('Profile updated successfully! Redirecting...');
+            setTimeout(() => navigate(`/profile`), 500);
         } catch (err) {
-            console.error('Error updating profile:', err);
+            if (err.response) {
+                toast.error(err.response.data.message || 'Failed to update profile.');
+            } else if (err.request) {
+                toast.error('Server did not respond. Please try again later.');
+            } else {
+                toast.error(`Unexpected error: ${err.message}`);
+            }
         }
     };
 
