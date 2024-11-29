@@ -56,7 +56,7 @@ export const EditChecklistSelect = (props) => {
    }, [selectedArr]);
    
    // Whenever a checkbox is selected, iterate through input and updates selectedArr
-   const handleSelect = (e) => {
+   const handleSelect = () => {
       let inputs = document.querySelectorAll('input[type=checkbox]');
       const currentSelected = []
       inputs.forEach((el) => {
@@ -100,7 +100,7 @@ export const EditRadioSelect = (props) => {
 
    useEffect(() => {
       let inputs = document.querySelectorAll('input[type=radio]');
-         inputs.forEach((el, i) => {
+         inputs.forEach(el => {
             el.addEventListener('click', handleRadioSelect);
          });
    }, []);
@@ -126,13 +126,13 @@ export const EditRadioSelect = (props) => {
             { required ? <span className='required'>*</span> : null }
          <div className='radio-display'>
             <div>
-               <input type='radio' value='other' id='radio-none' defaultChecked />
+               <input type='radio' name={name} value='' id='radio-none' />
                <label htmlFor='radio-none'>{nullLabel}</label>
             </div>
             { list.map((el, i) => {
                return (
                   <div key={`radio-${i}`}>
-                     <input type='radio' name={name} value={el._id} id={`radio-${i}`} defaultChecked />
+                     <input type='radio' name={name} value={el._id} id={`radio-${i}`} />
                      <label htmlFor={`radio-${i}`}>{el.name}</label>
                   </div>
                );

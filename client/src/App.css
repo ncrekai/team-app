@@ -222,7 +222,7 @@ span.required {
 }
 
 .add-item-container {
-    border: 1px black solid;
+    border: 3px solid #efefef;
     padding: 10px;
 }
 
@@ -230,7 +230,7 @@ span.required {
     width: 100%;
     flex-flow: column nowrap;
 }
-.location-list > div{
+.location-list .list-items{
     border: 1px #222 solid;
     padding: 10px;
     margin: 10px;
@@ -342,3 +342,25 @@ span.required {
     width: 200px;
     background-size: contain;
 }
+.display-list-container {
+    display: flex !important;
+    flex-flow: row nowrap;
+    gap: 20px 15px;
+    margin: 15px 0;
+}
+.display-list {
+    /* display: flex !important; */
+    border: 3px solid #efefef;
+    width: 100%;
+    padding: 15px;
+    font-size: 18px;
+}
+
+/* .display-input {
+    width: 40%;
+} */
+
+/* .display-input input[type="checkbox"] {
+    padding: 10px;
+    height: 25px;
+} */
