@@ -18,18 +18,18 @@ const profileSchema = new mongoose.Schema(
         preferences: {
             destinations: {
                 type: [String],  // Array of destination names or IDs
-                default: [],     // Default empty array
+                //default: [],     // Default empty array
                 enum: ['cities', 'countryside', 'cold climate', 'warm climate', 'family-oriented', 'beaches'],
             },
             travelType: {
                 type: String,
                 enum: ['outdoors', 'roadtrip', 'all-inclusive', 'tours', 'other'],
-                default: [],
+                //default: [],
             },
             accommodation: {
                 type: String,
                 enum: ['camping', 'hotel', 'hostel', 'residential rental', 'resort', 'farm stays', 'other'],
-                default: [],
+                //default: [],
             },
             activities: {
                 type: [String],

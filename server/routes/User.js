@@ -7,16 +7,16 @@ const authMiddleware = require('../middlewares/authMiddleware');
 router.route('/').get(userController.getUsers);
 
 // Get the selected user Info (GET)
-router.route('/user').get(authMiddleware, userController.getUserById);
+router.route('/:id').get(authMiddleware, userController.getUserById);
 
 // Create a new user (Register) (POST)
 router.route('/').post(userController.createUser);
 
 // Update the selected user Info (PUT)
-router.route('/user').put(authMiddleware, userController.updateUser);
+router.route('/:id').put(authMiddleware, userController.updateUser);
 
 // Delete the selected user (DELETE)
-router.route('/user').delete(authMiddleware, userController.deleteUser);
+router.route('/:id').delete(authMiddleware, userController.deleteUser);
 
 // Delete all users
 router.route('/').delete(userController.deleteAllUsers);

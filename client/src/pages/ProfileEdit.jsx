@@ -5,8 +5,9 @@ import axios from 'axios';
 import '../css/ProfileEdit.css';
 
 const ProfileEdit = () => {
-    const { user, profile } = useContext(AuthContext);
+    const { user, profile, token } = useContext(AuthContext);
     const navigate = useNavigate();
+
 
     /*I mostly went off based on what I did in register.jsx
     combined with how Natalie and/or Toqa did login
@@ -16,28 +17,33 @@ const ProfileEdit = () => {
     
     //Pre-fills current email if available
     const [formData, setFormData] = useState({
-        email: user?.email || '', 
+        email: profile?.email || '', 
         password: '',              
     });
 
     useEffect(() => {
-        if (user) {
+        if (profile) {
             setFormData({
-                email: user.email || '',   
+                _id: profile._id,
+                email: profile.email || '',   
                 password: '',              
             });
         }
-    }, [user]);
+    }, [profile]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prevState => ({ ...prevState, [name]: value }));
     };
 
+    // console.log('profile: ', profile);
+    // console.log('profile._id: ', profile._id);
+    // console.log('token: ', token);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
     
-        if (!user || !user._id) {
+        if (!profile || !profile._id) {
             console.error("User is not available or missing ID");
             return;
         }
@@ -49,11 +55,23 @@ const ProfileEdit = () => {
             if (!dataToUpdate.password) {
                 delete dataToUpdate.password; 
             }
-    
-            const response = await axios.put(`http://localhost:8080/profile/${user._id}`, dataToUpdate);
-    
+            
+            console.log("profile id?", profile._id);
+            console.log("user id?: ", user._id);
+            console.log("token:", token);
+            
+            const response = await axios.put(`http://localhost:8080/users/${profile._id}`, dataToUpdate, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+            
+
+            console.log('UserID?: ', profile._id);
+
             if (response.data) {
-                navigate(`/user/${user._id}`);
+                navigate(`/user/${profile._id}`);
             }
         } catch (err) {
             console.error('Error updating user', err);
@@ -61,7 +79,7 @@ const ProfileEdit = () => {
     };
 
     //If a user tries to access this without being logged in
-    if (!user) {
+    if (!profile) {
         return <div>Login Required</div>;
     };
 
