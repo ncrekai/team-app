@@ -82,7 +82,13 @@ exports.getGeneralWishlists = async (req, res) => {
     const { userId } = req.user;
 
     try {
-        const user = await User.findById(userId).populate('generalWishlist');
+        const user = await User.findById(userId).populate({
+            path: 'generalWishlist',
+            populate: {
+                path: 'items',
+                model: 'WishlistItem',
+            }
+        });
         if (!user || !user.generalWishlist) {
             return res.status(404).json({ message: 'No general wishlists found for this user' });
         }
@@ -105,7 +111,13 @@ exports.getTripWishlists = async (req, res) => {
     const { userId } = req.user;
 
     try {
-        const user = await User.findById(userId).populate('tripWishlist');
+        const user = await User.findById(userId).populate({
+            path: 'tripWishlist',
+            populate: {
+                path: 'items',
+                model: 'WishlistItem',
+            }
+        });
         if (!user || !user.tripWishlist) {
             return res.status(404).json({ message: 'No trip wishlists found for this user' });
         }
