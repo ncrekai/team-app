@@ -2,24 +2,28 @@ import { useParams, generatePath, Link } from 'react-router-dom';
 import { useState, useEffect, useContext } from 'react';
 // import { DisplayTrip } from '../components/DisplayBoxes';
 import { AuthContext } from '../services/authContext';
-import {getUserTrips} from '../services/tripsApi.jsx'
+// import {getUserTrips} from '../services/tripsApi.jsx'
 
 const TripAll = () => {
-   const { user, token, trips } = useContext(AuthContext);
-   const [userTrips, setUserTrips] = useState(null)
+   const { user } = useContext(AuthContext);
+   // const [userTrips, setUserTrips] = useState(null)
    const id = useParams().userId;
+   console.log(user)
 
- 
+   const path = generatePath('../user/:id/trips/new', {
+      id: user,
+    })
 
-   if(!trips) {
-      return <div>Loading user Info...</div>
+   if(!user) {
+      return <div>Loading user trips...</div>
    } else {
       return (
          <div className='page-inner'>
             <div className='page lists'>
                <div className='page-title'>All Saved Trips</div>
                <div className='body-container'>
-                  {trips.map((trip, i) => <DisplayTrip key={`trip-${i}`} user={id} trip={trip} />)}
+                  {user.trips.map((trip, i) => <DisplayTrip key={`trip-${i}`} user={id} trip={trip} />)}
+                  <Link to={path}>Add New Trip</Link>
                </div>
             </div>
          </div>
