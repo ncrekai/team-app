@@ -32,10 +32,10 @@ const TripNew = () => {
             <div className='page lists'>
                <div className='page-title'>New Trip</div>
                <form className='form-container' onSubmit={handleSubmit}>
-               <EditItemText name='name' val='' display='Name' handleInput={handleInput} />
-               <EditItemText name='destination' val='' display='Destination' handleInput={handleInput} />
-               <EditItemDate name='startDate' val={dateToday} display='Start Date' handleInput={handleInput} />
-               <EditItemDate name='endDate' val={dateToday} display='End Date' handleInput={handleInput} />
+               <EditItemText name='name' val='' display='Name' required={true} handleInput={handleInput} />
+               <EditItemText name='destination' val='' display='Destination' required={true} handleInput={handleInput} />
+               <EditItemDate name='startDate' val={dateToday} display='Start Date' required={true} handleInput={handleInput} />
+               <EditItemDate name='endDate' val={dateToday} display='End Date' required={true} handleInput={handleInput} />
                <EditChecklistSelect name='lists' lists={user.generalWishlist.concat(user.tripWishlist)} current={[]} display='Linked Lists' 
                   multiple={true} handleInput={handleInput} />
                   <div className='input-container'>

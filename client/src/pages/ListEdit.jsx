@@ -7,20 +7,19 @@ import axios from 'axios';
 const ListEdit = () => {
    const { user, token } = useContext(AuthContext);
    const { id } = useParams()
+   const navigate = useNavigate();
 
   const [list, setList] = useState(null)
+  const [newListData, setNewListData] = useState({});
+
 
   useEffect(() => {
     if (user) {
       let allLists = [...user.generalWishlist, ...user.tripWishlist]
-      let current = allLists.filter(el => el._id == id)
-      setList(current[0])
+      let current = allLists.find(el => el._id == id)
+      setList(current)
     }
    }, [user]);
-
-   const navigate = useNavigate();
-
-   const [newListData, setNewListData] = useState({});
 
    useEffect(() => console.log(newListData), [newListData]);
 
@@ -51,8 +50,8 @@ const ListEdit = () => {
          <div className='page lists'>
             <div className='page-title'>Edit List</div>
             <form className='form-container' onSubmit={handleSubmit}>
-              <EditItemText name='name' val={list.name} display='List Name' handleInput={handleInput} />
-              <EditRadioSelect name='trip' id={id} type={list.type} trips={user.trips} display='Linked Trips' handleInput={handleInput} />
+              <EditItemText name='name' val={list.name} display='List Name' required={true} handleInput={handleInput} />
+              <EditRadioSelect name='trip' id={id} type={list.type} list={user.trips} display='Linked Trips' required={true} handleInput={handleInput} nullLabel='No related trip' />
                <div className='input-container'>
                   <input className='button' type='submit' value='Submit' />
                </div>

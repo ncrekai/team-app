@@ -104,7 +104,7 @@ a {
     margin: 0;
     padding: 0;
 }
-.page, .register-container form, .input-container, .dashboard-container, .body-container {
+.page, .register-container form, .add-item-container, .input-container, .dashboard-container, .body-container {
     width: 100%;
     flex-flow: column nowrap;
     align-items: center;
@@ -167,6 +167,8 @@ a {
     align-items: center;
 }
 .input-text {
+    display: inline-block !important;
+    max-width: calc(100% - 30px) !important;
     height: 40px;
     border: none;
     background: #efefef;
@@ -174,7 +176,8 @@ a {
     padding: 5px;
 }
 .input-label {
-    /* flex: 1; */
+    display: inline-block !important;
+    max-width: calc(100% - 30px) !important;
     font-size: 18px;
     padding: 5px 0;
 }
@@ -183,10 +186,12 @@ a {
     background: #fff;
     padding: 5px 15px;
     font-size: 18px;
+    cursor:pointer;
 }
 span.required {
     color: red;
     padding: 0 10px;
+    display: inline
 }
 .dashboard-display {
     border: 1px black solid;
@@ -203,11 +208,24 @@ span.required {
     font-size: 18px;
     padding: 5px 0;
 }
+.wide {
+    display: flex !important;
+    flex-flow: row wrap;
+    gap: 15px;
+}
+
 .checkbox-display>div, .radio-display>div {
+    display: flex !important;
     flex-flow: row nowrap;
     /* flex: 1; */
     gap: 10px
 }
+
+.add-item-container {
+    border: 1px black solid;
+    padding: 10px;
+}
+
 .location-list {
     width: 100%;
     flex-flow: column nowrap;

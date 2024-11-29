@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { getDayIn, getDayOut } from '../helpfulFunctions';
+// import { getDayIn, getDayOut } from '../helpfulFunctions';
 
 export const EditItemDate = (props) => {
-   const { name, date, display, handleInput } = props;
+   const { name, date, display, required, handleInput } = props;
 
    const handleDate = (e) => {
       const formattedDate = e.target.value;
@@ -14,13 +14,13 @@ export const EditItemDate = (props) => {
          <div className='input-label'>{display}:</div>
          <input required className='input-text' id={name} name={name} type='date' 
             onChange={handleDate} defaultValue={date} />
-         <span className='required'>*</span>
+         {required ? <span className='required'>*</span> : null }
       </div>
    );
 };
 
 export const EditItemText = (props) => {
-   const { name, val, display, handleInput } = props;
+   const { name, val, display, required, handleInput } = props;
 
    const handleText = (e) => {
       handleInput(e.target.name, e.target.value)
@@ -32,7 +32,7 @@ export const EditItemText = (props) => {
          <input onFocus={(e) => (e.target.value = '')} className='input-text' id={name} name={name} type='text' 
             onChange={handleText} defaultValue={val} required
          />
-         <span className='required'>*</span>
+         {required ? <span className='required'>*</span> : null }
       </div>
    );
 };
@@ -84,14 +84,14 @@ export const EditChecklistSelect = (props) => {
 
 
 export const EditRadioSelect = (props) => {
-   const { name, id, type, trips, display, handleInput } = props;
+   const { name, id, type, list, display, required, handleInput, nullLabel } = props;
 
    const [currentSelect, setCurrentSelect] = useState(null)
 
    useEffect(() => {
       if (type === 'trip') {
          let curr
-         trips.forEach(trip => { 
+         list.forEach(trip => { 
             if (trip.tripWishlist.includes(id)) curr = trip._id
          })
          setCurrentSelect(curr)
@@ -105,39 +105,31 @@ export const EditRadioSelect = (props) => {
          });
    }, []);
 
-      useEffect(() => {
-      let inputs = document.querySelectorAll('input[type=radio]');
-         inputs.forEach((el, i) => {
-            if (i === 0) {
-               if (currentSelect == null) el.checked = true;
-            } else {
-               if (currentSelect == el.value) el.checked = true;
-            }
-         });
+   useEffect(() => {
+   let inputs = document.querySelectorAll('input[type=radio]');
+      inputs.forEach((el, i) => {
+         if (i === 0) {
+            if (currentSelect == null) el.checked = true;
+         } else {
+            if (currentSelect == el.value) el.checked = true;
+         }
+      });
    }, [currentSelect]);
 
    const handleRadioSelect = (e) => {
       e.target.value == '' ? handleInput('tripId', null) : handleInput('tripId', e.target.value);
    };
 
-   { trips.map((el, i) => {
-      return (
-         <div key={`radio-${i}`}>
-            <input type='radio' name={name} value={el._id} id={`radio-${i}`} defaultChecked />
-            <label htmlFor={`radio-${i}`}>{el.name}</label>
-         </div>
-      );
-   })}
-
    return (
       <div className='input-container'>
-         <div className='input-label'>{display}:</div>
+            <div className='input-label'>{display}:</div>
+            { required ? <span className='required'>*</span> : null }
          <div className='radio-display'>
             <div>
-               <input type='radio' name={name} value={undefined} id='radio-none' defaultChecked />
-               <label htmlFor='radio-none'>No related trip</label>
+               <input type='radio' value='other' id='radio-none' defaultChecked />
+               <label htmlFor='radio-none'>{nullLabel}</label>
             </div>
-            { trips.map((el, i) => {
+            { list.map((el, i) => {
                return (
                   <div key={`radio-${i}`}>
                      <input type='radio' name={name} value={el._id} id={`radio-${i}`} defaultChecked />
