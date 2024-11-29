@@ -44,8 +44,8 @@ const Navbar = () => {
                         <>
                             <Button variant="contained" color="success" onClick={handleMyAccountClick}> My Account</Button>
                             <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleCloseMenu}>
-                                <MenuItem onClick={() => navigate(`/user/${user.id}`)}>Profile</MenuItem>
-                                <MenuItem onClick={() => navigate('/dashboard')}>Dashboard</MenuItem>
+                                <MenuItem onClick={() => { navigate(`/profile`); handleCloseMenu();}}>Profile</MenuItem>
+                                <MenuItem onClick={() => { navigate('/dashboard'); handleCloseMenu();}}>Dashboard</MenuItem>
                                 <MenuItem onClick={handleLogoutClick}>Logout</MenuItem>
                             </Menu>
                         </>
