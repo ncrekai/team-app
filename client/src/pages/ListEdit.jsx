@@ -1,8 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { FormGroup, FormControlLabel, Checkbox, Button, IconButton } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import AddIcon from '@mui/icons-material/Add';
+import { Edit as EditIcon, Delete as DeleteIcon, Add as AddIcon } from '@mui/icons-material';
 import { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../services/authContext.jsx';
 import { EditItemText, EditRadioSelect } from '../components/EditItem';

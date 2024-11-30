@@ -93,7 +93,7 @@ a {
 }
 
 .page-container {
-    background: #fff;
+    /* background: #f7f7f7; */
     align-items: stretch;
     height: calc(100vh - 100px)
 }
@@ -110,7 +110,9 @@ a {
     align-items: center;
     justify-content: flex-start;
     flex: 1;
+    /* background-color: #fff; */
 }
+
 .body-container form, .form-container {
     width: 100%;
     flex-flow: column nowrap;
@@ -131,7 +133,7 @@ a {
     padding: 10px;
     align-items: center;
     flex: 1;
-    background: #fff;
+    /* background: #fff; */
 }
 .page-title, .page-title a {
     font-size: 26px;
@@ -236,6 +238,7 @@ span.required {
     margin: 10px;
 }
 .return {
+    display: flex !important;
     flex-flow: row nowrap;
     justify-content: space-evenly;
     width: 100%;
@@ -355,7 +358,14 @@ span.required {
     padding: 15px;
     font-size: 18px;
 }
-
+.display-list>div:first-child {
+    font-size: larger;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+/* .display-all {
+    display: flex !important;
+} */
 /* .display-input {
     width: 40%;
 } */
