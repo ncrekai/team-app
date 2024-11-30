@@ -15,8 +15,8 @@
     "nodemon": "^3.1.7"
   },
   "scripts": {
-  "frontend": "cd client && npm run frontend",
-  "backend": "cd server && npm run backend",
-  "dev": "concurrently \"npm run backend\" \"sleep 3 && npm run frontend\""
+    "frontend": "cd client && npm run frontend",
+    "backend": "cd server && npm run backend",
+    "dev": "concurrently \"npm run backend\" \"sleep 3 && npm run frontend\""
   }
 }
