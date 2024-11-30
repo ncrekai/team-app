@@ -1,7 +1,9 @@
 import { Box, Typography, Button } from '@mui/material';
 import heroImg from '../assets/heroImg.jpg';
+import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
+   const navigate = useNavigate();
 
    return (
        <Box className='landingContainer'>
@@ -13,7 +15,7 @@ const Home = () => {
              <Typography variant="h6" className='subheading'>
                 Plan your perfect getaway today and make your dream vacation a reality!
              </Typography>
-             <Button className='planButton'>Plan Your Trip</Button>
+             <Button className='planButton' onClick={() => navigate('/register')}>Plan Your Trip</Button>
           </Box>
 
           <Box className='rightContent'>
